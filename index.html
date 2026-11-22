@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Mona+Sans:wdth,wght@75..125,400..900&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20261125">
+  <link rel="stylesheet" href="styles.css?v=20261126">
 </head>
 <body>
   <!-- one page-tall pixel canvas: sea across the top, wrapping down both sides of the page -->
@@ -16,7 +16,6 @@
   <header class="nav-wrap">
     <nav class="nav" aria-label="Main">
       <a class="logo" href="#top">yn.<sup>®</sup></a>
-      <span class="avail"><i></i>Available for work</span>
       <div class="links">
         <a href="#about">About</a>
         <a href="#projects">Work</a>
@@ -160,7 +159,10 @@
           </article>
         </div>
         <div class="deck-ui">
-          <button class="deck-next" id="deck-next" type="button" aria-label="Next card">&gt;</button>
+          <div class="deck-btns">
+            <button class="deck-next deck-prev" id="deck-prev" type="button" aria-label="Previous card">&lt;</button>
+            <button class="deck-next" id="deck-next" type="button" aria-label="Next card">&gt;</button>
+          </div>
           <span class="deck-count" id="deck-count"></span>
         </div>
       </div>
@@ -225,7 +227,10 @@
           </article>
         </div>
         <div class="deck-ui">
-          <button class="deck-next" id="cert-next" type="button" aria-label="Next certificate">&gt;</button>
+          <div class="deck-btns">
+            <button class="deck-next deck-prev" id="cert-prev" type="button" aria-label="Previous certificate">&lt;</button>
+            <button class="deck-next" id="cert-next" type="button" aria-label="Next certificate">&gt;</button>
+          </div>
           <span class="deck-count" id="cert-count"></span>
         </div>
       </div>
@@ -236,14 +241,14 @@
         <p class="pill">Education</p>
         <h2 class="display">Where i<br>study</h2>
       </div>
-      <article class="edu">
+      <div class="edu-wrap"><article class="edu">
         <div class="edu-logo-box"><img class="edu-logo" src="assets/vit-logo.svg" alt="Vellore Institute of Technology" width="372" height="100"></div>
         <div class="edu-body">
           <h3>B.Tech CSE</h3>
           <p class="edu-years">2024 – 2028</p>
           <p class="edu-school">VIT Chennai</p>
         </div>
-      </article>
+      </article></div>
     </section>
 
     <section id="track" class="block">
@@ -272,17 +277,20 @@
         <div class="walkman" id="walkman" data-state="paused">
           <div class="wm-body">
             <div class="wm-top"><span class="wm-brand">WALKMAN</span><span class="wm-led" aria-hidden="true"></span></div>
-            <div class="wm-window" aria-hidden="true">
-              <div class="reel"></div><div class="wm-tape"><i></i><i></i><i></i></div><div class="reel"></div>
+            <div class="wm-deck">
+              <canvas class="wm-cover" id="sp-cover" width="32" height="32" role="img" aria-label="Album cover"></canvas>
+              <div class="wm-window" aria-hidden="true">
+                <div class="reel"></div><div class="wm-tape"></div><div class="reel"></div>
+              </div>
             </div>
             <div class="wm-lcd">
               <div class="wm-title"><span id="sp-title">…</span></div>
               <div class="wm-artist" id="sp-artist"></div>
-              <div class="wm-time"><span id="sp-cur">0:00</span><div class="wm-bar" role="progressbar" aria-label="Song progress"><i id="sp-bar"></i></div><span id="sp-dur">0:00</span></div>
+              <div class="wm-time"><div class="wm-bar" role="progressbar" aria-label="Song progress"><i id="sp-bar"></i></div><span id="sp-left">-0:00</span></div>
             </div>
             <div class="wm-keys" aria-hidden="true"><i>◀◀</i><i>▶</i><i>■</i><i>▶▶</i></div>
           </div>
-          <a class="wm-listen" id="sp-listen" href="https://open.spotify.com" target="_blank" rel="noopener">Listen with me</a>
+          <a class="wm-listen" id="sp-listen" href="https://open.spotify.com" target="_blank" rel="noopener">Vibe w/ me</a>
         </div>
       </div>
 
@@ -321,7 +329,7 @@
       <p class="pill pill-dark">Have an idea?</p>
       <h2 class="display">Let’s ship it</h2>
       <p class="lede">Let’s turn it into a sharp digital experience and get it out the door.</p>
-      <a class="btn btn-lg" href="mailto:hello@yourname.dev">hello@yourname.dev ↗</a>
+      <a class="btn btn-lg" href="mailto:tharungopinath.work@gmail.com">tharungopinath.work@gmail.com </a>
       <div class="harbor">
         <canvas id="harbor" aria-hidden="true"></canvas>
         <canvas class="zoro" aria-hidden="true"></canvas>
@@ -343,11 +351,11 @@
     <p>© Tharun Gopinath 2026 · a little pixel paradise made by <span class="mk"><i data-logo="claude" data-brand></i>Claude</span>, <span class="mk"><img class="mk-logo" src="assets/diet-coke.svg" alt="Diet Coke" width="48" height="18"> diet coke</span> and <span class="mk"><svg class="heart" viewBox="0 0 9 8" shape-rendering="crispEdges" aria-hidden="true"><path fill="#e0463b" d="M1 0h2v1H1zM6 0h2v1H6zM0 1h4v1H0zM5 1h4v1H5zM0 2h9v2H0zM1 4h7v1H1zM2 5h5v1H2zM3 6h3v1H3zM4 7h1v1H4z"/></svg>love</span>.</p>
   </footer>
 
-  <script src="js/logos.js?v=20261125"></script>
-  <script src="js/theme.js?v=20261125"></script>
-  <script src="js/sea.js?v=20261125"></script>
-  <script src="js/props.js?v=20261125"></script>
-  <script src="js/harbor.js?v=20261125"></script>
+  <script src="js/logos.js?v=20261126"></script>
+  <script src="js/theme.js?v=20261126"></script>
+  <script src="js/sea.js?v=20261126"></script>
+  <script src="js/props.js?v=20261126"></script>
+  <script src="js/harbor.js?v=20261126"></script>
   <script>
     // logo-only chips for stickers and skill rows
     document.querySelectorAll('[data-chips]').forEach((el) => {
@@ -365,14 +373,14 @@
       c.style.setProperty('--x', rnd(-16, 16).toFixed(0) + 'px');
       c.style.setProperty('--y', rnd(-9, 9).toFixed(0) + 'px');
     }
-    function makeDeck(deck, nextBtn, count) {
+    function makeDeck(deck, prevBtn, nextBtn, count) {
       const all = [...deck.children]; all.forEach(pose);
       let stack = [], busy = false;
       function show() {
         stack.forEach((c, i) => { c.style.zIndex = stack.length - i; c.hidden = false; });
         const n = all.filter((c) => stack.includes(c));
         count.textContent = stack.length ? `${n.indexOf(stack[0]) + 1} / ${n.length}` : '';
-        nextBtn.hidden = stack.length < 2;
+        nextBtn.hidden = prevBtn.hidden = stack.length < 2;
       }
       nextBtn.addEventListener('click', () => {
         if (busy || stack.length < 2) return;
@@ -388,6 +396,16 @@
           setTimeout(() => { busy = false; }, 460);
         }, 380);
       });
+      prevBtn.addEventListener('click', () => {            // the card at the back comes forward again
+        if (busy || stack.length < 2) return;
+        busy = true;
+        const back = stack[stack.length - 1];
+        pose(back);
+        stack.unshift(stack.pop());
+        show();
+        back.style.setProperty('--i', 0); back.classList.remove('wash'); void back.offsetWidth; back.classList.add('wash');
+        setTimeout(() => { busy = false; }, 460);
+      });
       return {
         all,
         set(list) {
@@ -398,7 +416,7 @@
         },
       };
     }
-    const work = makeDeck(document.getElementById('deck'), document.getElementById('deck-next'), document.getElementById('deck-count'));
+    const work = makeDeck(document.getElementById('deck'), document.getElementById('deck-prev'), document.getElementById('deck-next'), document.getElementById('deck-count'));
     const letters = document.querySelectorAll('.letter');
     function pick(d) {
       letters.forEach((l) => l.setAttribute('aria-pressed', String(l.dataset.domain === d)));
@@ -406,7 +424,7 @@
     }
     letters.forEach((l) => l.addEventListener('click', () => pick(l.dataset.domain)));
     pick('ai');
-    const certs = makeDeck(document.getElementById('deck-cert'), document.getElementById('cert-next'), document.getElementById('cert-count'));
+    const certs = makeDeck(document.getElementById('deck-cert'), document.getElementById('cert-prev'), document.getElementById('cert-next'), document.getElementById('cert-count'));
     certs.set(certs.all);
 
     // brand icons for the social buttons and the footer
@@ -482,7 +500,7 @@
     // until it is deployed the walkman plays a sample track.
     const NOW_PLAYING_URL = '/api/now-playing';
     const spotify = (function () {
-      const wm = $('walkman'), title = $('sp-title'), artist = $('sp-artist'), cur = $('sp-cur'), dur = $('sp-dur'), bar = $('sp-bar'), listen = $('sp-listen'), note = $('sp-note');
+      const wm = $('walkman'), title = $('sp-title'), artist = $('sp-artist'), left = $('sp-left'), bar = $('sp-bar'), cover = $('sp-cover'), listen = $('sp-listen'), note = $('sp-note');
       const DEMO = { isPlaying: true, title: 'Sample song', artist: 'Spotify is not connected yet', durationMs: 214000, id: null, url: 'https://open.spotify.com' };
       let track = null, polledAt = 0, demo = true;
       const fmt = (ms) => { const s = Math.max(0, Math.round(ms / 1000)); return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`; };
@@ -490,10 +508,31 @@
       function paint() {
         if (!track || panels.spotify.hidden) return;
         const p = progress();
-        cur.textContent = fmt(p); dur.textContent = fmt(track.durationMs); bar.style.width = (p / track.durationMs * 100).toFixed(1) + '%';
+        left.textContent = '-' + fmt(track.durationMs - p); bar.style.width = (p / track.durationMs * 100).toFixed(1) + '%';
         wm.dataset.state = track.isPlaying ? 'playing' : 'paused';
       }
+      // album cover, shrunk to 32x32 so it reads as pixel art; without Spotify a little vinyl record is drawn instead
+      const cg = cover.getContext('2d'); cg.imageSmoothingEnabled = true;
+      function vinyl() {
+        cg.fillStyle = '#6b5bd6'; cg.fillRect(0, 0, 32, 32);
+        for (let y = 0; y < 32; y++) for (let x = 0; x < 32; x++) {
+          const d = Math.hypot(x - 15.5, y - 15.5);
+          if (d < 13) { cg.fillStyle = d < 4 ? '#e0fd72' : d < 5.5 ? '#252525' : (Math.round(d) % 3 ? '#1b1b22' : '#2c2c36'); cg.fillRect(x, y, 1, 1); }
+        }
+        cg.fillStyle = '#fff'; cg.fillRect(9, 8, 2, 2); cg.fillRect(11, 7, 1, 1);
+      }
+      let coverUrl = null;
+      function setCover(url) {
+        if (url === coverUrl) return;
+        coverUrl = url;
+        if (!url) return vinyl();
+        const im = new Image();
+        im.onload = () => { if (coverUrl === url) { cg.clearRect(0, 0, 32, 32); cg.drawImage(im, 0, 0, 32, 32); } };
+        im.onerror = () => { if (coverUrl === url) vinyl(); };
+        im.src = url;
+      }
       function show() {
+        setCover(demo ? null : track.cover);
         title.textContent = track.title; artist.textContent = track.artist;
         title.classList.toggle('scroll', title.scrollWidth > title.parentElement.clientWidth);
         listen.href = track.url || 'https://open.spotify.com';

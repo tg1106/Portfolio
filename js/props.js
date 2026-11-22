@@ -100,6 +100,14 @@
     [[TX - 3, TY + 3], [TX + 1, TY + 4], [TX - 1, TY + 6]].forEach(([x, y]) => { r(x, y, 3, 3, '#6b4423'); r(x, y, 1, 1, '#a0693a'); });
   }
 
+  function carve(w, h, draw) {
+    const cells = new Set(); draw((x, y) => cells.add(Math.round(x) + ',' + Math.round(y)));
+    return mk(w + 1, h + 1, (r) => {
+      cells.forEach((k) => { const [x, y] = k.split(',').map(Number); if (!cells.has((x + 1) + ',' + (y + 1))) r(x + 1, y + 1, 1, 1, '#f6e8c0'); });
+      cells.forEach((k) => { const [x, y] = k.split(',').map(Number); r(x, y, 1, 1, '#c6a362'); });
+    });
+  }
+
   const KINDS = {
     castle(night) {
       const L = '#ead19a', M = '#d6b676', D = '#b8935a', K = '#7a5b30', win = night ? '#ffd36b' : '#8a6a3c';
@@ -228,6 +236,10 @@
         [[21, 4], [23, 4], [22, 5], [21, 6], [23, 6]].forEach(([x, y]) => r(x, y, 1, 1, R));
       });
     },
+    // sand drawings: a groove pressed into the sand with a light lip on its lower right
+    heart() { return carve(13, 10, (d) => ['..###...###..', '.#...#.#...#.', '#.....#.....#', '#...........#', '.#.........#.', '..#.......#..', '...#.....#...', '....#...#....', '.....#.#.....', '......#......'].forEach((row, y) => [...row].forEach((ch, x) => ch === '#' && d(x, y)))); },
+    smiley() { return carve(17, 17, (d) => { for (let t = 0; t < 6.3; t += 0.04) d(8 + 7.4 * Math.cos(t), 8 + 7.4 * Math.sin(t)); [[5, 6], [11, 6], [5, 7], [11, 7]].forEach(([x, y]) => d(x, y)); for (let t = 0.35; t < 2.8; t += 0.06) d(8 + 4.6 * Math.cos(t), 8.5 + 4.2 * Math.sin(t)); }); },
+    spiral() { return carve(17, 17, (d) => { for (let t = 0; t < 16; t += 0.04) d(8 + 0.5 * t * Math.cos(t), 8 + 0.5 * t * Math.sin(t)); }); },
     board() {
       return mk(10, 40, (r) => {
         for (let y = 0; y < 40; y++) {
@@ -253,24 +265,30 @@
      content (text, buttons, cards, photo...) plus a margin, so nothing ever sits behind or under a component. */
   const placed = [];
   const BURIED = { chest: 1, map: 1 };
-  const SPEC = [['grove', 4], ['castle', 5], ['umbrella', 5], ['palm', 4], ['chest', 4], ['castleSmall', 5], ['map', 4], ['towel', 5], ['bucket', 5],
-    ['rocks', 5], ['rocks', 4], ['board', 4], ['ball', 5], ['ball', 4], ['starfish', 4], ['starfish', 3], ['shell', 4], ['shell', 3], ['map', 3], ['umbrella', 4], ['castleSmall', 4]];
+  const SPEC = [['castle', 5], ['umbrella', 5], ['palm', 4], ['chest', 4], ['castleSmall', 5], ['map', 4], ['towel', 5], ['bucket', 5],
+    ['rocks', 5], ['rocks', 4], ['board', 4], ['ball', 5], ['starfish', 4], ['shell', 4], ['heart', 5], ['smiley', 5], ['spiral', 5]];
   const layer = Object.assign(document.createElement('div'), { id: 'beach-props' });
   layer.setAttribute('aria-hidden', 'true');
   document.body.append(layer);
-  SPEC.forEach(([kind, scale]) => {
+  function addProp(kind, scale, parent, fixed) {
     const src = KINDS[kind](false);
     const el = document.createElement('span');
     el.className = 'prop prop-' + kind;
     const cv = document.createElement('canvas');
     el.append(Object.assign(document.createElement('i'), { className: 'shadow' }), cv);
     if (BURIED[kind]) el.append(Object.assign(document.createElement('i'), { className: 'mound' }));
-    layer.append(el);
-    placed.push({ kind, cv, el, scale, w: src.width * scale, h: src.height * scale, x: null, y: null });
-  });
+    parent.append(el);
+    const p = { kind, cv, el, scale, w: src.width * scale, h: src.height * scale, x: fixed ? 0 : null, y: fixed ? 0 : null, fixed };
+    placed.push(p);
+    return p;
+  }
+  SPEC.forEach(([kind, scale]) => addProp(kind, scale, layer));
+  // the palms and hammock stand on top of the Qualification card for good, they are not part of the random scatter
+  const eduWrap = document.querySelector('.edu-wrap');
+  if (eduWrap) addProp('grove', 3, eduWrap, true).el.classList.add('edu-grove');
 
   const TEXT = 'h1, h2, .lede, .byline, .sec-head p, .pass p, .foot p';            // measured by their text, not their full-width box
-  const BOXES = '.nav, .pill, .btn, .letter, .deck-wrap, .cards > *, .stats li, .rows li, .qa details, .about-photo, .about-lane, .socials, .heat-panel, .edu, .tabs, .walkman, .wm-listen, .book, .diary-nav, .cta, .foot .links, .logo';
+  const BOXES = '.nav, .pill, .btn, .letter, .deck-wrap, .cards > *, .stats li, .rows li, .qa details, .about-photo, .about-lane, .socials, .heat-panel, .edu, .tabs, .walkman, .wm-listen, .book, .diary-nav, .edu-grove, .cta, .foot .links, .logo';
   function layoutProps() {
     const sy = window.scrollY, body = document.body;
     layer.style.height = body.offsetHeight + 'px';
@@ -283,7 +301,7 @@
     document.querySelectorAll(TEXT).forEach((e) => { const g = document.createRange(); g.selectNodeContents(e); add(g.getBoundingClientRect()); });
     const hit = (a, b) => a.l < b.r && a.r > b.l && a.t < b.b && a.b > b.t;
     const taken = [];
-    placed.slice().sort((a, b) => b.w * b.h - a.w * a.h).forEach((p) => {
+    placed.filter((p) => !p.fixed).sort((a, b) => b.w * b.h - a.w * a.h).forEach((p) => {
       const fits = (x, y) => { const k = { l: x - 8, r: x + p.w + 8, t: y - 8, b: y + p.h + 8 }; return !blocks.some((b) => hit(k, b)) && !taken.some((b) => hit(k, b)); };
       let ok = p.x !== null && p.x + p.w <= x1 && p.y >= y0 && p.y + p.h <= y1 && fits(p.x, p.y);   // keep a still-valid spot
       for (let i = 0; !ok && i < 160 && y1 - y0 > p.h && x1 - x0 > p.w; i++) {

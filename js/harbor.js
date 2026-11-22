@@ -171,9 +171,9 @@
 
   /* ---------- Zoro strolling along the shore (24x34, faces right): green hair, three gold earrings, scar over the eye,
      open white shirt, green haramaki, black trousers, three swords at the hip ---------- */
-  function zoroFrame(f) {
+  function zoroFrame(f, asleep) {
     const c = mk(24, 34, (r) => {
-      const bob = f & 1 ? -1 : 0, leg = [4, 0, -4, 0][f];
+      const bob = asleep ? f : f & 1 ? -1 : 0, leg = asleep ? 0 : [4, 0, -4, 0][f];
       const GRN = '#3f9d4b', GRD = '#2a7437', SKN = '#d9a066', SKS = '#b9824c', WHT = '#f0ece0', WHS = '#c9c4b2', BLK = '#22282a';
       // swords: three scabbards slanting down and back from the left hip, gold guards, green hilts
       [['#f2f2f2', 0], ['#15191a', 1], ['#3a3f45', 2]].forEach(([col, k]) => {
@@ -196,20 +196,61 @@
       r(7, 8 + bob, 1, 1, '#f2c14e'); r(7, 10 + bob, 1, 1, '#f2c14e'); r(8, 11 + bob, 1, 1, '#f2c14e');
       r(7, 2 + bob, 12, 3, GRN); r(8, 1 + bob, 9, 1, GRN); r(7, 4 + bob, 3, 5, GRN);
       r(9, 0 + bob, 2, 1, GRN); r(13, 0 + bob, 3, 1, GRN); r(17, 2 + bob, 2, 1, GRD); r(10, 5 + bob, 8, 1, GRD);
-      r(14, 7 + bob, 3, 1, '#14181a'); r(15, 6 + bob, 1, 3, '#a8402f');
+      r(14, asleep ? 8 + bob : 7 + bob, 3, 1, '#14181a'); r(15, 6 + bob, 1, 3, '#a8402f');   // asleep: the eye is a closed line
       r(18, 8 + bob, 1, 2, SKS); r(14, 11 + bob, 3, 1, '#7a3b2c');
     });
     outline(c);
     return c;
   }
+  /* Zoro only strolls now and then: every ROLL_MS the harbor rolls a WALK_CHANCE (10 in 100) while it is on screen.
+     Rarely (SLEEP_CHANCE of the walks) he stops mid-stride, falls asleep standing up for 3 seconds with a snot bubble
+     growing from his nose, the bubble pops and he walks on. */
+  const WALK_CHANCE = 0.1, SLEEP_CHANCE = 0.15, ROLL_MS = 2000, SPEED = 60, ZW = 38, ZH = 34, SNORE = 3;
   const zoroCv = document.querySelector('.zoro');
   if (zoroCv) {
-    zoroCv.width = 24; zoroCv.height = 34;
-    const frames = [0, 1, 2, 3].map(zoroFrame), zg = zoroCv.getContext('2d');
-    let zs = 0;
-    const zshow = () => { zg.clearRect(0, 0, 24, 34); zg.drawImage(frames[zs % 4], 0, 0); };
-    zshow();
-    if (!reduce) setInterval(() => { zs++; zshow(); }, 190);
+    zoroCv.width = ZW; zoroCv.height = ZH;
+    const zg = zoroCv.getContext('2d');
+    const walk = [0, 1, 2, 3].map((f) => zoroFrame(f)), nap = [0, 1].map((f) => zoroFrame(f, true));
+    const dot = (x, y, col) => { zg.fillStyle = col; zg.fillRect(x, y, 1, 1); };
+    function bubble(rad, bob) {                     // pixel bubble on the nose, pinned to the face
+      const cx = 19 + rad, cy = 10 + bob;
+      for (let y = -8; y <= 8; y++) for (let x = -8; x <= 8; x++) {
+        const d = Math.hypot(x, y);
+        if (d <= rad) dot(Math.round(cx + x), Math.round(cy + y), d > rad - 1.1 ? '#7fb8e6' : '#e6f4ff');
+      }
+      if (rad > 3) dot(Math.round(cx - rad * 0.45), Math.round(cy - rad * 0.45), '#ffffff');
+    }
+    function pop(t) {                               // a ring of specks flying out
+      const r = 6 + t * 24;
+      for (let k = 0; k < 8; k++) dot(Math.round(25 + Math.cos(k * 0.785) * r * 0.6), Math.round(10 + Math.sin(k * 0.785) * r * 0.6), '#bfe4ff');
+    }
+    const still = () => { zg.clearRect(0, 0, ZW, ZH); zg.drawImage(walk[1], 0, 0); };
+    still();
+    if (!reduce) {
+      let z = null, near = false;
+      new IntersectionObserver((es) => { near = es[0].isIntersecting; }).observe(zoroCv.parentElement);
+      const start = () => { z = { x: -ZW * 3, step: 0, nap: Math.random() < SLEEP_CHANCE ? null : false, napAt: 0.3 + Math.random() * 0.35, sleep: -1 }; zoroCv.style.display = 'block'; };
+      setInterval(() => { if (!z && near && !document.hidden && Math.random() < WALK_CHANCE) start(); }, ROLL_MS);
+      setInterval(() => {
+        if (!z) return;
+        const dt = 0.05, width = zoroCv.parentElement.clientWidth;
+        zg.clearRect(0, 0, ZW, ZH);
+        if (z.sleep >= 0) {                         // standing asleep, then the bubble pops
+          z.sleep += dt;
+          const nod = Math.floor(z.sleep / 0.75) & 1;
+          zg.drawImage(nap[nod], 0, 0);
+          if (z.sleep < SNORE) bubble(1 + 5 * (z.sleep / SNORE) + 0.6 * Math.sin(z.sleep * 5), nod);
+          else if (z.sleep < SNORE + 0.3) pop((z.sleep - SNORE) / 0.3);
+          else { z.sleep = -1; z.nap = false; }
+        } else {
+          z.x += SPEED * dt; z.step += dt;
+          zg.drawImage(walk[Math.floor(z.step / 0.19) % 4], 0, 0);
+          if (z.nap === null && z.x > width * z.napAt) z.sleep = 0;
+          if (z.x > width) { z = null; zoroCv.style.display = 'none'; return; }
+        }
+        zoroCv.style.left = z.x + 'px';
+      }, 50);
+    }
   }
   const meCv = document.querySelector('.boat-me');
   if (meCv) {

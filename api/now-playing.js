@@ -46,6 +46,7 @@ module.exports = async (req, res) => {
       title: item.name,
       artist: item.artists.map((a) => a.name).join(', '),
       album: item.album.name,
+      cover: (item.album.images && (item.album.images[1] || item.album.images[0]) || {}).url,
       durationMs: item.duration_ms,
       progressMs: progress,
       url: item.external_urls.spotify,

@@ -36,6 +36,26 @@
   }
   const shade = (hex, k) => '#' + [1, 3, 5].map((i) => Math.round(parseInt(hex.slice(i, i + 2), 16) * k).toString(16).padStart(2, '0')).join('');
 
+  // Grove frame: palms are drawn once per day/night; the hammock is redrawn every tick so it sways in the wind.
+  const GROVE_BASE = {};
+  function groveFrame(night, t) {
+    if (!GROVE_BASE[night]) { const b = mk(146, 66, (r) => { drawPalm(r, 0, false); drawPalm(r, 84, true); }); GROVE_BASE[night] = night ? moonlit(b) : b; }
+    const hm = mk(146, 66, (r) => {
+      const x0 = 23, x1 = 119, sag = 17 + Math.sin(t * 1.1) * 2.4, gust = 0.6 + 0.6 * Math.sin(t * 0.37);
+      for (let x = x0; x <= x1; x++) {
+        const u = (x - x0) / (x1 - x0);
+        const y = 42 + Math.round(sag * 4 * u * (1 - u) + Math.sin(t * 2.3 - u * 6) * 1.3 * gust * Math.sin(Math.PI * u));
+        r(x, y, 1, 4, Math.floor((x - x0) / 6) % 2 ? '#fff1da' : '#ec714c'); r(x, y + 4, 1, 1, '#b8523a');
+        if (x % 3 === 0) r(x, y + 5, 1 + Math.round(Math.sin(t * 3 + x) * 0.6 + 0.4), 1, '#f6ca78');
+      }
+      r(x0 - 1, 40, 3, 4, '#5b4a36'); r(x1 - 1, 40, 3, 4, '#5b4a36');
+    });
+    const out = mk(146, 66, () => {});
+    const g = out.getContext('2d');
+    g.drawImage(GROVE_BASE[night], 0, 0); g.drawImage(night ? moonlit(hm) : hm, 0, 0);
+    return out;
+  }
+
   // Night recolour: pull every colour toward moonlit blue, keep lit windows and gold glinting.
   function moonlit(cv) {
     const g = cv.getContext('2d'), d = g.getImageData(0, 0, cv.width, cv.height), a = d.data;
@@ -172,6 +192,25 @@
         r(x0 - 1, 40, 3, 4, '#5b4a36'); r(x1 - 1, 40, 3, 4, '#5b4a36');
       });
     },
+    rocks() {
+      return mk(40, 25, (r) => {
+        const blob = (cx, cy, rx, ry) => {
+          for (let y = -ry; y <= ry; y++) for (let x = -rx; x <= rx; x++) {
+            const d = (x / rx) ** 2 + (y / ry) ** 2;
+            if (d > 1) continue;
+            let c = '#8c8f98';
+            if (d > 0.7 && (x + y > 1)) c = '#6d7079'; else if (x + y < -rx * 0.35 && d < 0.8) c = '#b4b7c0';
+            r(cx + x, cy + y, 1, 1, c);
+          }
+        };
+        blob(14, 16, 13, 8); blob(29, 19, 9, 5); blob(6, 21, 5, 3);
+        r(10, 17, 4, 1, '#6d7079'); r(26, 19, 3, 1, '#6d7079');
+        const star = (x, y, col, dot) => [['...A...', '...A...', 'AAAAAAA', '.AAAAA.', '..AAA..', '.AA.AA.', 'AA...AA']].forEach((m) => m.forEach((row, j) => [...row].forEach((ch, i) => { if (ch === 'A') r(x + i, y + j, 1, 1, col); })));
+        star(10, 4, '#ec714c'); r(13, 7, 1, 1, '#f6ca78');
+        r(31, 14, 1, 1, '#f3bd9f');
+        [[30, 14], [29, 15], [31, 15], [30, 16], [29, 13]].forEach(([x, y]) => r(x, y, 1, 1, '#f08a7a'));   // small pink starfish on the second rock
+      });
+    },
     chest() {
       return mk(32, 24, (r) => {
         const W = '#8a5a2b', D = '#5b3a1b', G = '#f2c14e', GL = '#ffe08a';
@@ -220,7 +259,7 @@
   const placed = [];
   const BURIED = { chest: 1, map: 1 };
   const SPEC = [['grove', 4], ['castle', 5], ['umbrella', 5], ['palm', 4], ['chest', 4], ['castleSmall', 5], ['map', 4], ['towel', 5], ['bucket', 5],
-    ['board', 4], ['ball', 5], ['ball', 4], ['starfish', 4], ['starfish', 3], ['shell', 4], ['shell', 3], ['map', 3], ['umbrella', 4], ['castleSmall', 4]];
+    ['rocks', 5], ['rocks', 4], ['board', 4], ['ball', 5], ['ball', 4], ['starfish', 4], ['starfish', 3], ['shell', 4], ['shell', 3], ['map', 3], ['umbrella', 4], ['castleSmall', 4]];
   const layer = Object.assign(document.createElement('div'), { id: 'beach-props' });
   layer.setAttribute('aria-hidden', 'true');
   document.body.append(layer);
@@ -236,7 +275,7 @@
   });
 
   const TEXT = 'h1, h2, .lede, .byline, .sec-head p, .pass p, .foot p';            // measured by their text, not their full-width box
-  const BOXES = '.nav, .pill, .btn, .stickers li, .letter, .deck-wrap, .cards > *, .stats li, .rows li, .qa details, .about-photo, .heat-panel, .cta, .foot .links, .logo';
+  const BOXES = '.nav, .pill, .btn, .stickers li, .letter, .deck-wrap, .cards > *, .stats li, .rows li, .qa details, .about-photo, .about-lane, .socials, .heat-panel, .cta, .foot .links, .logo';
   function layoutProps() {
     const sy = window.scrollY, body = document.body;
     layer.style.height = body.offsetHeight + 'px';
@@ -269,8 +308,8 @@
     lastNight = night;
     document.documentElement.style.setProperty('--grain', GRAIN[night ? 1 : 0]);
     placed.forEach((p) => {
-      const src = KINDS[p.kind](night);
-      if (night) moonlit(src);
+      const src = p.kind === 'grove' ? groveFrame(night, 0) : KINDS[p.kind](night);
+      if (night && p.kind !== 'grove') moonlit(src);
       p.cv.width = src.width; p.cv.height = src.height;
       p.cv.getContext('2d').drawImage(src, 0, 0);
       p.cv.style.width = src.width * p.scale + 'px';
@@ -279,6 +318,13 @@
     });
   }
   setInterval(paint, 500); paint();
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    setInterval(() => {
+      if (document.hidden) return;
+      const night = document.documentElement.dataset.night === '1';
+      placed.forEach((p) => { if (p.kind === 'grove' && p.x !== null) { const g = p.cv.getContext('2d'); g.clearRect(0, 0, p.cv.width, p.cv.height); g.drawImage(groveFrame(night, performance.now() / 1000), 0, 0); } });
+    }, 100);
+  }
   let relayout = 0;
   const schedule = () => { clearTimeout(relayout); relayout = setTimeout(layoutProps, 200); };
   new ResizeObserver(schedule).observe(document.body);

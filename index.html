@@ -45,7 +45,6 @@
           <li class="s3" data-chips="amazonwebservices">Cloud</li>
         </ul>
       </div>
-      <canvas class="crab" aria-hidden="true"></canvas>
     </section>
 
     <section id="about" class="block about">
@@ -53,15 +52,18 @@
         <p class="pill">About</p>
         <h2 class="display">I build things<br>PEOPLE REMEMBER</h2>
         <p class="lede">I design and build clean websites, apps and back-ends that help ideas look sharper, feel trusted and work with purpose.</p>
-        <a class="btn" href="#contact">Start a project</a>
       </div>
-      <figure class="about-photo"><img src="assets/me.png" alt="Portrait of Tharun Gopinath" width="200" height="200"><figcaption>Tharun Gopinath</figcaption></figure>
-      <ul class="stats">
-        <li class="c-lav"><b>3</b><span>Projects shipped</span><p>From habit trackers to developer dashboards.</p></li>
-        <li class="c-yel"><b>11+</b><span>Technologies</span><p>Front-end, back-end, data and cloud.</p></li>
-        <li class="c-mint"><b>3</b><span>Certifications</span><p>Cloud, front-end and problem solving.</p></li>
-        <li class="c-blue"><b>24/7</b><span>Curiosity</span><p>Always exploring what’s possible next.</p></li>
-      </ul>
+      <div class="about-lane" aria-hidden="true"><canvas class="crab"></canvas></div>
+      <figure class="about-photo">
+        <img src="assets/me.png" alt="Portrait of Tharun Gopinath" width="200" height="200">
+        <figcaption>Tharun Gopinath</figcaption>
+        <nav class="socials" aria-label="Find me online">
+          <a href="https://github.com/tg1106" target="_blank" rel="noopener" aria-label="GitHub" title="GitHub" data-logo="github"></a>
+          <a href="#" aria-label="LinkedIn" title="LinkedIn (add your link)" data-logo="linkedin"></a>
+          <a href="#" aria-label="LeetCode" title="LeetCode (add your link)" data-logo="leetcode"></a>
+          <a href="#" aria-label="Website" title="Website (add your link)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3.5 3.5 3.5 14.5 0 18M12 3c-3.5 3.5-3.5 14.5 0 18"/></svg></a>
+        </nav>
+      </figure>
     </section>
 
     <section id="projects" class="block">
@@ -188,28 +190,46 @@
         <p class="pill">Certificates</p>
         <h2 class="display">Proof of<br>the practice</h2>
       </div>
-      <div class="cards">
-        <article class="card pass c-blue">
-          <p class="pass-tag"><span aria-hidden="true"></span>Beach pass · Certificate · Sample</p>
-          <h3>Cloud practitioner</h3>
-          <p>Cloud fundamentals, architecture, and building for scale.</p>
-          <a class="more" href="#">View credential <span aria-hidden="true">↗</span></a>
-          <div class="pass-stub"><div class="marquee" data-logos="amazonwebservices"></div></div>
-        </article>
-        <article class="card pass c-pink">
-          <p class="pass-tag"><span aria-hidden="true"></span>Beach pass · Certificate · Sample</p>
-          <h3>Front-end development</h3>
-          <p>Accessible interfaces, responsive systems, and modern web foundations.</p>
-          <a class="more" href="#">View credential <span aria-hidden="true">↗</span></a>
-          <div class="pass-stub"><div class="marquee" data-logos="meta"></div></div>
-        </article>
-        <article class="card pass c-lime">
-          <p class="pass-tag"><span aria-hidden="true"></span>Beach pass · Certificate · Sample</p>
-          <h3>Problem solving</h3>
-          <p>Data structures, algorithms, and writing better solutions.</p>
-          <a class="more" href="#">View credential <span aria-hidden="true">↗</span></a>
-          <div class="pass-stub"><div class="marquee" data-logos="hackerrank"></div></div>
-        </article>
+      <div class="deck-wrap">
+        <div class="deck" id="deck-cert" aria-live="polite">
+          <article class="postcard c-blue" data-kind="certificate">
+            <figure class="pc-pic"><svg class="art" viewBox="0 0 252 126" shape-rendering="crispEdges" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><rect width="252" height="126" fill="#3b9ec9"/><g fill="#fff"><rect x="40" y="62" width="120" height="30"/><rect x="58" y="46" width="52" height="20"/><rect x="92" y="34" width="46" height="26"/><rect x="132" y="48" width="34" height="18"/></g><g fill="#bbdafe"><rect x="40" y="86" width="120" height="6"/></g><g><rect x="196" y="78" width="12" height="40" fill="#d9402e"/><rect x="212" y="78" width="12" height="40" fill="#b8302a"/><rect x="190" y="52" width="40" height="40" fill="#f2c14e"/><rect x="196" y="58" width="28" height="28" fill="#e8a317"/><rect x="206" y="64" width="8" height="16" fill="#fff1da"/><rect x="202" y="68" width="16" height="8" fill="#fff1da"/></g></svg></figure>
+            <span class="stamp stamp-cert" aria-hidden="true"><i></i><b>Certificate</b><em>Sample</em></span>
+            <div class="pc-address">
+              <p class="pc-post">Certificate · Cloud · Sample</p>
+              <h3>Cloud practitioner</h3>
+              <p class="pc-text">Cloud fundamentals, architecture, and building for scale.</p>
+              <a class="more" href="#">View credential <span aria-hidden="true">↗</span></a>
+              <div class="marquee" data-logos="amazonwebservices"></div>
+            </div>
+          </article>
+          <article class="postcard c-pink" data-kind="certificate">
+            <figure class="pc-pic"><svg class="art" viewBox="0 0 252 126" shape-rendering="crispEdges" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><rect width="252" height="126" fill="#ec714c"/><rect x="38" y="22" width="150" height="86" fill="#252525"/><rect x="30" y="14" width="150" height="86" fill="#fff"/><rect x="30" y="14" width="150" height="12" fill="#252525"/><g fill="#e0fd72"><rect x="36" y="18" width="4" height="4"/><rect x="44" y="18" width="4" height="4"/><rect x="52" y="18" width="4" height="4"/></g><rect x="38" y="34" width="50" height="58" fill="#fedcdd"/><g fill="#ec714c"><rect x="96" y="34" width="76" height="8"/><rect x="96" y="48" width="60" height="5"/><rect x="96" y="58" width="68" height="5"/><rect x="96" y="68" width="44" height="5"/></g><g><rect x="196" y="78" width="12" height="40" fill="#d9402e"/><rect x="212" y="78" width="12" height="40" fill="#b8302a"/><rect x="190" y="52" width="40" height="40" fill="#f2c14e"/><rect x="196" y="58" width="28" height="28" fill="#e8a317"/><rect x="206" y="64" width="8" height="16" fill="#fff1da"/><rect x="202" y="68" width="16" height="8" fill="#fff1da"/></g></svg></figure>
+            <span class="stamp stamp-cert" aria-hidden="true"><i></i><b>Certificate</b><em>Sample</em></span>
+            <div class="pc-address">
+              <p class="pc-post">Certificate · Front-end · Sample</p>
+              <h3>Front-end development</h3>
+              <p class="pc-text">Accessible interfaces, responsive systems, and modern web foundations.</p>
+              <a class="more" href="#">View credential <span aria-hidden="true">↗</span></a>
+              <div class="marquee" data-logos="meta"></div>
+            </div>
+          </article>
+          <article class="postcard c-lime" data-kind="certificate">
+            <figure class="pc-pic"><svg class="art" viewBox="0 0 252 126" shape-rendering="crispEdges" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><rect width="252" height="126" fill="#2f9e68"/><g fill="#fff"><rect x="40" y="30" width="10" height="66"/><rect x="40" y="30" width="26" height="10"/><rect x="40" y="86" width="26" height="10"/><rect x="132" y="30" width="10" height="66"/><rect x="116" y="30" width="26" height="10"/><rect x="116" y="86" width="26" height="10"/></g><g fill="#e0fd72"><rect x="76" y="56" width="10" height="14"/><rect x="92" y="56" width="10" height="14"/><rect x="108" y="56" width="4" height="14"/></g><g><rect x="196" y="78" width="12" height="40" fill="#d9402e"/><rect x="212" y="78" width="12" height="40" fill="#b8302a"/><rect x="190" y="52" width="40" height="40" fill="#f2c14e"/><rect x="196" y="58" width="28" height="28" fill="#e8a317"/><rect x="206" y="64" width="8" height="16" fill="#fff1da"/><rect x="202" y="68" width="16" height="8" fill="#fff1da"/></g></svg></figure>
+            <span class="stamp stamp-cert" aria-hidden="true"><i></i><b>Certificate</b><em>Sample</em></span>
+            <div class="pc-address">
+              <p class="pc-post">Certificate · Algorithms · Sample</p>
+              <h3>Problem solving</h3>
+              <p class="pc-text">Data structures, algorithms, and writing better solutions.</p>
+              <a class="more" href="#">View credential <span aria-hidden="true">↗</span></a>
+              <div class="marquee" data-logos="hackerrank"></div>
+            </div>
+          </article>
+        </div>
+        <div class="deck-ui">
+          <button class="deck-next" id="cert-next" type="button" aria-label="Next certificate">&gt;</button>
+          <span class="deck-count" id="cert-count"></span>
+        </div>
       </div>
     </section>
 
@@ -249,9 +269,12 @@
       <div class="harbor">
         <canvas id="harbor" aria-hidden="true"></canvas>
         <div class="boat" role="img" aria-label="Tharun sailing a small boat">
-          <canvas class="boat-back" aria-hidden="true"></canvas>
-          <canvas class="boat-me" aria-hidden="true"></canvas>
-          <canvas class="boat-front" aria-hidden="true"></canvas>
+          <div class="boat-in" aria-hidden="true">
+            <canvas class="boat-back"></canvas>
+            <canvas class="boat-me"></canvas>
+            <canvas class="boat-front"></canvas>
+          </div>
+          <canvas class="boat-water" aria-hidden="true"></canvas>
         </div>
       </div>
     </section>
@@ -260,7 +283,7 @@
   <footer class="foot">
     <a class="logo" href="#top">yn.<sup>®</sup></a>
     <div class="links"><a href="#about">About</a><a href="#projects">Work</a><a href="#skills">Skills</a><a href="#certificates">Certificates</a><a href="#track">Track me</a><a href="#faq">FAQs</a><a href="#contact">Contact</a></div>
-    <p>© Your name · a little pixel paradise, a lot of possibility.</p>
+    <p>© Tharun Gopinath 2026 · a little pixel paradise made by <span class="mk"><i data-logo="claude" data-brand></i>Claude</span>, <span class="mk"><i data-logo="cocacola" data-brand></i>diet coke</span> and <span class="mk"><svg class="heart" viewBox="0 0 9 8" shape-rendering="crispEdges" aria-hidden="true"><path fill="#e0463b" d="M1 0h2v1H1zM6 0h2v1H6zM0 1h4v1H0zM5 1h4v1H5zM0 2h9v2H0zM1 4h7v1H1zM2 5h5v1H2zM3 6h3v1H3zM4 7h1v1H4z"/></svg>love</span>.</p>
   </footer>
 
   <script src="js/logos.js"></script>
@@ -278,51 +301,65 @@
     });
     Beach.sea.start();
 
-    // domain letters + postcard stack
-    const letters = document.querySelectorAll('.letter'), deck = document.getElementById('deck');
-    const all = [...deck.children], count = document.getElementById('deck-count'), nextBtn = document.getElementById('deck-next');
+    // Postcard stacks. A card keeps its tilt until it is sent to the back of the stack, where it gets a new random one.
     const rnd = (a, b) => a + Math.random() * (b - a);
-    // A card's tilt is only re-rolled when it is sent to the back of the stack; otherwise it keeps its pose.
     function pose(c) {
       c.style.setProperty('--r', ((Math.random() < 0.5 ? -1 : 1) * rnd(2, 9)).toFixed(1) + 'deg');
       c.style.setProperty('--x', rnd(-16, 16).toFixed(0) + 'px');
       c.style.setProperty('--y', rnd(-9, 9).toFixed(0) + 'px');
     }
-    all.forEach(pose);
-    let stack = [], domain = 'ai', busy = false;
-    function show() {
-      stack.forEach((c, i) => { c.style.zIndex = stack.length - i; c.hidden = false; });
-      const n = all.filter((c) => c.dataset.domain === domain);
-      count.textContent = stack.length ? `${n.indexOf(stack[0]) + 1} / ${n.length}` : '';
-      nextBtn.hidden = stack.length < 2;
+    function makeDeck(deck, nextBtn, count) {
+      const all = [...deck.children]; all.forEach(pose);
+      let stack = [], busy = false;
+      function show() {
+        stack.forEach((c, i) => { c.style.zIndex = stack.length - i; c.hidden = false; });
+        const n = all.filter((c) => stack.includes(c));
+        count.textContent = stack.length ? `${n.indexOf(stack[0]) + 1} / ${n.length}` : '';
+        nextBtn.hidden = stack.length < 2;
+      }
+      nextBtn.addEventListener('click', () => {
+        if (busy || stack.length < 2) return;
+        busy = true;
+        const top = stack[0];
+        top.style.setProperty('--dir', Math.random() < 0.5 ? -1 : 1);          // flies off to a random side
+        top.classList.remove('wash'); top.classList.add('leaving');
+        setTimeout(() => {
+          pose(top);                                                           // new orientation for its place at the back
+          stack.push(stack.shift());
+          top.classList.remove('leaving');                                     // slides back in behind the others
+          show();
+          setTimeout(() => { busy = false; }, 460);
+        }, 380);
+      });
+      return {
+        all,
+        set(list) {
+          busy = false; stack = list;
+          all.forEach((c) => { c.hidden = !list.includes(c); c.classList.remove('leaving'); });
+          show();
+          list.forEach((c, i) => { c.style.setProperty('--i', i); c.classList.remove('wash'); void c.offsetWidth; c.classList.add('wash'); });
+        },
+      };
     }
+    const work = makeDeck(document.getElementById('deck'), document.getElementById('deck-next'), document.getElementById('deck-count'));
+    const letters = document.querySelectorAll('.letter');
     function pick(d) {
-      domain = d; busy = false;
       letters.forEach((l) => l.setAttribute('aria-pressed', String(l.dataset.domain === d)));
-      stack = all.filter((c) => c.dataset.domain === d);
-      all.forEach((c) => { c.hidden = !stack.includes(c); c.classList.remove('leaving'); });
-      show();
-      stack.forEach((c, i) => { c.style.setProperty('--i', i); c.classList.remove('wash'); void c.offsetWidth; c.classList.add('wash'); });
+      work.set(work.all.filter((c) => c.dataset.domain === d));
     }
     letters.forEach((l) => l.addEventListener('click', () => pick(l.dataset.domain)));
-    nextBtn.addEventListener('click', () => {
-      if (busy || stack.length < 2) return;
-      busy = true;
-      const top = stack[0];
-      top.style.setProperty('--dir', Math.random() < 0.5 ? -1 : 1);            // flies off to a random side
-      top.classList.remove('wash'); top.classList.add('leaving');
-      setTimeout(() => {
-        pose(top);                                                             // new orientation for its place at the back
-        stack.push(stack.shift());
-        top.classList.remove('leaving');                                       // slides back in behind the others
-        show();
-        setTimeout(() => { busy = false; }, 460);
-      }, 380);
-    });
     pick('ai');
+    const certs = makeDeck(document.getElementById('deck-cert'), document.getElementById('cert-next'), document.getElementById('cert-count'));
+    certs.set(certs.all);
 
-    // GitHub contributions. Put your username here; with it empty the calendar shows sample data and nothing is requested.
-    const GITHUB_USER = '';
+    // brand icons for the social buttons and the footer
+    document.querySelectorAll('[data-logo]').forEach((el) => {
+      const L = LOGOS[el.dataset.logo];
+      el.insertAdjacentHTML('beforeend', `<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="${el.hasAttribute('data-brand') ? L.color : 'currentColor'}" d="${L.d}"/></svg>`);
+    });
+
+    // GitHub contributions for this username (the calendar loads from a public contributions API; with it empty it shows sample data instead).
+    const GITHUB_USER = 'tg1106';
     (function () {
       const year = new Date().getFullYear(), heat = document.getElementById('heat'), months = document.getElementById('heat-months');
       document.getElementById('gh-year').textContent = year;

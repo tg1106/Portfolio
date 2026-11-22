@@ -58,6 +58,7 @@
       }
     }
     ctx.putImageData(img, 0, 0);
+    drawBoatWater(p, time);
   }
 
   /* ---------- the boat ---------- */
@@ -93,6 +94,37 @@
     r(86, GUN - 4, 5, 6, '#8a5a2b'); r(90, GUN - 6, 4, 4, '#8a5a2b');         // raised bow
     r(86, GUN - 4, 5, 1, '#d99a55');
   });
+
+  /* ---------- water in front of the hull ----------
+     A translucent, wavy water layer overlaps the bottom of the hull: dithered like the sea, a foam crest on the surface,
+     wash trailing off both ends and a faint wobbling reflection of the hull. The boat bobs behind it. */
+  const WW = 116, WH = 22, SURF = 4, HULL_X0 = 21, HULL_X1 = 84;
+  const wc = document.querySelector('.boat-water');
+  let wimg, wbuf;
+  if (wc) { wc.width = WW; wc.height = WH; wimg = wc.getContext('2d').createImageData(WW, WH); wbuf = new Uint32Array(wimg.data.buffer); }
+  function drawBoatWater(p, time) {
+    if (!wc) return;
+    wbuf.fill(0);
+    const sh = [p.sea3, p.sea2, p.sea1].map((c) => c.map(Math.round)), foam = p.foam.map(Math.round), hull = [74, 43, 18];
+    for (let x = 0; x < WW; x++) {
+      const surf = SURF + Math.sin(x * 0.33 + time * 2.4) * 0.9 + Math.sin(x * 0.12 - time * 1.5) * 0.8, yi = Math.round(surf);
+      for (let y = yi; y < WH; y++) {
+        const d = (y - yi) / (WH - yi), lv = d * 2.3, i0 = Math.floor(lv), fr = lv - i0;
+        let col = sh[Math.min(2, i0 + (fr > BAYER[((y & 1) << 1) | (x & 1)] ? 1 : 0))];
+        const under = x > HULL_X0 && x < HULL_X1 && y - yi < 7;
+        if (under) col = mix(col, hull, 0.3 * (1 - (y - yi) / 7) * (0.7 + 0.3 * Math.sin(x * 0.6 + time * 3 + y)));   // reflection of the hull
+        const crest = Math.sin(x * 0.5 + time * 3) > -0.35;
+        if (y === yi && crest) col = foam;
+        else if (y === yi + 1 && ((x + yi) & 1)) col = mix(col, foam, 0.7);
+        wbuf[y * WW + x] = pack(col, y - yi < 2 ? 238 : 250);
+      }
+      // wash trailing off the bow and stern, and a lapping crest where the water meets the hull
+      const nearEnd = (x > HULL_X0 - 9 && x <= HULL_X0 + 1) || (x >= HULL_X1 - 1 && x < HULL_X1 + 9);
+      if (nearEnd && hash(x, Math.floor(time * 3), 5) > 0.35) wbuf[(yi - 1) * WW + x] = pack(foam, 230);
+      if (x > HULL_X0 && x < HULL_X1 && hash(x >> 1, Math.floor(time * 4), 9) > 0.8) wbuf[Math.max(0, yi - 1) * WW + x] = pack(foam, 200);
+    }
+    wc.getContext('2d').putImageData(wimg, 0, 0);
+  }
 
   /* ---------- the pixel character (36x42): dark tousled hair, moustache, patterned pale-blue shirt ---------- */
   const HAIR = '#1c1512', SK = '#b27a52', SKD = '#8f5d3b', SH = '#d4e0ec', SHD = '#a9bfd8', PAT = '#e9dcc0', PL = '#6f9fcf', MOUTH = '#7a3b2c';

@@ -16,7 +16,7 @@
 
   const canvas = document.getElementById('sea');
   const ctx = canvas.getContext('2d');
-  let W = 0, rows = 0, OFF = 0, bottomPx = 0, img, buf;
+  let W = 0, rows = 0, OFF = 0, bottomPx = 0, img, buf, textBox = null, lhX = 0;
 
   const pack = (c, a = 255) => (a << 24) | (c[2] << 16) | (c[1] << 8) | c[0];
   const hash = (x, y, z) => {
@@ -27,6 +27,15 @@
   const BAYER = [0, 0.5, 0.75, 0.25];
   const mix = B.theme.mix;
   const rnd = (a, b) => a + Math.random() * (b - a);
+  const hitsText = (xl, xr, yt, yb) => !!textBox && xl < textBox.x1 + 6 && xr > textBox.x0 - 6 && yt < textBox.y1 + 6 && yb > textBox.y0 - 6;
+  // random spot whose whole bounding box (halfW wide either side, up/down tall) clears the headline text
+  function freeSpot(halfW, up, down, yMin, yMax) {
+    for (let i = 0; i < 50; i++) {
+      const x = rnd(W * 0.04, W * 0.96), y = rnd(yMin, yMax);
+      if (!hitsText(x - halfW, x + halfW, y - up, y + down)) return { x, y };
+    }
+    return null;
+  }
 
   const shoreY = (x, t) => S0 + TIDE * Math.sin(t * 0.42) + 2.2 * Math.sin(x * 0.045 + t * 0.7) + 1.2 * Math.sin(x * 0.12 - t * 1.1);
   const wetMax = (x) => S0 + TIDE + 3 + 1.6 * Math.sin(x * 0.09) + 1.2 * Math.sin(x * 0.31);
@@ -40,6 +49,16 @@
     canvas.width = W; canvas.height = rows;
     canvas.style.height = rows * PX + 'px';
     bottomPx = rows * PX;
+    // headline text in art coordinates (x from the page's left edge, y from the top of the hero)
+    const h1 = document.querySelector('.hero h1');
+    textBox = null;
+    if (h1 && hero) {
+      const g = document.createRange(); g.selectNodeContents(h1);
+      const r = g.getBoundingClientRect(), hr = hero.getBoundingClientRect();
+      textBox = { x0: r.left / PX, x1: r.right / PX, y0: (r.top - hr.top) / PX, y1: (r.bottom - hr.top) / PX };
+    }
+    // the lighthouse sits on the horizon to the right of the headline
+    lhX = Math.round(Math.min(W - 12, Math.max(W * 0.8, (textBox ? textBox.x1 : 0) + 22)));
     img = ctx.createImageData(W, rows);
     buf = new Uint32Array(img.data.buffer);
   }
@@ -122,30 +141,50 @@
     '....KWWKWKWKWK....',
     '....KKKKKKKKKK....',
   ];
+  // Thousand Sunny: lion figurehead, red hull with portholes and the "1" circle, white sail with the straw-hat jolly roger,
+  // red striped main sail, striped crow's nest. Bow faces right (the sprite is mirrored when it sails left).
   function buildShip() {
-    const w = 36, h = 27, g = Array.from({ length: h }, () => Array(w).fill(null));
-    const R = (x, y, ww, hh, c) => { for (let j = y; j < y + hh; j++) for (let i = x; i < x + ww; i++) if (g[j] && i < w) g[j][i] = B.theme.hex(c); };
-    R(1, 16, 5, 4, '#8a5a2b'); R(1, 16, 5, 1, '#b8793f'); R(2, 18, 2, 1, '#f2c14e');   // stern cabin (behind the sail)
-    R(14, 2, 2, 19, '#5b3a1b'); R(28, 5, 1, 15, '#5b3a1b');                              // masts
-    R(15, 0, 8, 4, '#1d1b1b'); R(17, 1, 4, 1, '#f2c14e'); R(18, 0, 2, 1, '#f2c14e'); R(18, 2, 2, 2, '#f6f1e2');   // mast-top flag: tiny straw-hat skull
-    R(4, 3, 22, 16, '#f6f1e2'); R(4, 3, 22, 1, '#d9d0b6'); R(4, 18, 22, 1, '#d9d0b6'); R(24, 4, 2, 14, '#d9d0b6'); // main sail
-    // jolly roger: black crossbones with knobs at the corners, then skull and hat on top
+    const w = 58, h = 42, g = Array.from({ length: h }, () => Array(w).fill(null));
+    const R = (x, y, ww, hh, c) => { for (let j = y; j < y + hh; j++) for (let i = x; i < x + ww; i++) if (g[j] && i >= 0 && i < w) g[j][i] = B.theme.hex(c); };
+    const RED = '#d33a3a', DRED = '#8c1f1f', WOOD = '#a8743c', DWOOD = '#6b4423', BLK = '#1d1b1b', WHT = '#f6f1e2', GRY = '#d9d0b6', YEL = '#f2c14e', ORG = '#e8861c';
+    R(14, 6, 2, 22, DWOOD); R(40, 8, 2, 20, DWOOD);                                           // masts
+    for (let y = 8; y < 21; y++) { const inset = y < 10 || y > 18 ? 1 : 0; for (let x = 2 + inset; x < 14; x++) R(x, y, 1, 1, (x >> 1) % 2 ? RED : DRED); }   // red striped main sail
+    R(16, 4, 8, 15, WHT); R(23, 4, 1, 15, GRY); R(19, 5, 1, 13, GRY); R(16, 4, 8, 1, GRY);     // white main sail
+    R(2, 22, 12, 5, WHT); R(1, 20, 14, 2, RED); R(1, 21, 14, 1, YEL); R(4, 24, 2, 2, '#5aa9c9'); R(9, 24, 2, 2, '#5aa9c9');   // stern cabin
+    R(24, 6, 17, 20, WHT); R(24, 6, 17, 1, GRY); R(24, 25, 17, 1, GRY); R(39, 7, 2, 18, GRY);   // front sail
+    // jolly roger: black crossbones with knobs at the corners, then skull and straw hat on top
     const E = Array.from({ length: 14 }, () => Array(18).fill(null));
     const set = (x, y, c) => { if (E[y] && x >= 0 && x < 18) E[y][x] = c; };
     const bone = (x0, y0, x1, y1) => { const n = Math.max(Math.abs(x1 - x0), Math.abs(y1 - y0)); for (let i = 0; i <= n; i++) { const x = Math.round(x0 + (x1 - x0) * i / n), y = Math.round(y0 + (y1 - y0) * i / n); set(x, y, 'K'); set(x + 1, y, 'K'); } };
     bone(2, 2, 8, 8); bone(15, 2, 9, 8); bone(2, 11, 8, 6); bone(15, 11, 9, 6);
     [[0, 0], [15, 0], [0, 11], [15, 11]].forEach(([x, y]) => { for (let dy = 0; dy < 3; dy++) for (let dx = 0; dx < 3; dx++) set(x + dx, y + dy, 'K'); set(x + 1, y + 1, 'W'); });
     EMBLEM.forEach((row, y) => [...row].forEach((ch, x) => { if (ch !== '.') set(x, y, ch); }));
-    const CM = { K: '#1d1b1b', Y: '#f2c14e', R: '#d9402e', W: '#f6f1e2' };
-    E.forEach((row, y) => row.forEach((ch, x) => { if (ch) R(6 + x, 4 + y, 1, 1, CM[ch]); }));
-    [[29, 9, 1], [29, 10, 2], [29, 11, 3], [29, 12, 3], [29, 13, 4], [29, 14, 4], [29, 15, 5], [29, 16, 5]].forEach(([x, y, ww]) => R(x, y, ww, 1, '#e8e0c8'));   // jib
-    R(3, 19, 30, 1, '#b8793f'); R(2, 20, 32, 2, '#8a5a2b'); R(3, 22, 31, 2, '#8a5a2b');
-    R(5, 24, 27, 1, '#4a2b12'); R(8, 25, 21, 1, '#4a2b12'); R(11, 26, 15, 1, '#4a2b12');
-    [8, 12, 16, 20, 24, 28].forEach((x) => R(x, 21, 2, 1, '#4a2b12'));
-    R(32, 16, 4, 3, '#fff6e2'); R(32, 19, 2, 2, '#8a5a2b'); R(34, 19, 2, 2, '#ffcf9e'); R(35, 19, 1, 1, '#173d3c'); R(31, 16, 1, 2, '#8a5a2b');   // sheep figurehead
+    const CM = { K: BLK, Y: YEL, R: '#d9402e', W: WHT };
+    E.forEach((row, y) => row.forEach((ch, x) => { if (ch) R(23 + x, 10 + y, 1, 1, CM[ch]); }));
+    for (let x = 36; x < 47; x++) R(x, 3, 1, 3, x % 2 ? RED : YEL); R(37, 6, 9, 2, WHT); R(36, 5, 11, 1, BLK); R(41, 0, 4, 3, BLK); R(41, 2, 1, 1, DWOOD);   // crow's nest + flag
+    R(3, 26, 47, 1, BLK); R(3, 27, 46, 6, RED); R(3, 25, 46, 1, WHT); R(5, 33, 44, 1, BLK);   // red hull with trim
+    [9, 15, 35, 41].forEach((x) => { R(x, 29, 3, 3, WHT); R(x + 1, 30, 1, 1, BLK); });         // portholes
+    for (let y = 34; y < 42; y++) R(5 + (y - 34), y, 44 - (y - 34) * 3, 1, y % 2 ? DWOOD : WOOD);   // wooden lower hull
+    for (let dy = -4; dy <= 4; dy++) for (let dx = -4; dx <= 4; dx++) { const d = dx * dx + dy * dy; if (d <= 17) R(28 + dx, 33 + dy, 1, 1, d > 11 ? BLK : WOOD); }   // the "1" circle
+    R(28, 31, 1, 5, RED); R(27, 32, 1, 1, RED); R(27, 36, 3, 1, RED);
+    R(0, 28, 3, 6, WOOD); R(0, 28, 1, 6, DWOOD);                                                 // stern cannon barrel
+    R(46, 28, 5, 9, YEL); R(45, 28, 1, 9, BLK); R(47, 30, 2, 2, RED); R(47, 34, 2, 2, RED);       // gold shield under the figurehead
+    R(49, 22, 7, 7, YEL); R(48, 20, 2, 5, ORG); R(50, 17, 2, 5, ORG); R(53, 18, 2, 4, ORG); R(55, 20, 2, 3, ORG);   // lion head and mane
+    R(53, 24, 1, 1, BLK); R(55, 26, 2, 2, ORG); R(53, 28, 3, 1, DWOOD);
     return g;
   }
   const SHIP = buildShip();
+  // Lighthouse on a tiny island, far away on the horizon
+  function buildLighthouse() {
+    const w = 14, h = 22, g = Array.from({ length: h }, () => Array(w).fill(null));
+    const R = (x, y, ww, hh, c) => { for (let j = y; j < y + hh; j++) for (let i = x; i < x + ww; i++) if (g[j] && i >= 0 && i < w) g[j][i] = B.theme.hex(c); };
+    R(2, 19, 10, 1, '#6f9a52'); R(1, 20, 12, 1, '#8c8f98'); R(0, 21, 14, 1, '#6d7079'); R(4, 20, 3, 1, '#a9acb6');
+    for (let y = 6; y < 19; y++) { const x0 = y < 12 ? 5 : 4, x1 = y < 12 ? 9 : 10, red = Math.floor((y - 6) / 3) % 2; R(x0, y, x1 - x0, 1, red ? '#d9402e' : '#f6f1e2'); R(x1 - 1, y, 1, 1, red ? '#a52d1f' : '#d3cbb4'); }
+    R(3, 5, 8, 1, '#2c2c34'); R(4, 4, 6, 1, '#4a4a55');           // gallery
+    R(4, 1, 6, 1, '#d9402e'); R(5, 0, 4, 1, '#d9402e');            // roof
+    return g;
+  }
+  const LH = buildLighthouse();
   const KC = { body: '#7a3b8f', dark: '#4f2360', light: '#a76bbd', spot: '#c28ad6', eye: '#fff6d8', iris: '#f2c14e', pupil: '#1d1226', sucker: '#e6c9ef' };
   for (const k in KC) KC[k] = B.theme.hex(KC[k]);
 
@@ -161,8 +200,9 @@
   ];
 
   function spawnFish(t, near) {
-    const myth = !near && (FORCE_MYTH || Math.random() < 0.2);
-    const y0 = myth ? rnd(HOR + 16, S0 - 10) : rnd(HOR + 10, S0 - 8);
+    let myth = !near && (FORCE_MYTH || Math.random() < 0.2), spot = null;
+    if (myth && !(spot = freeSpot(36, 26, 6, HOR + 16, S0 - 10))) myth = false;   // no clear water: a plain fish jumps instead
+    const y0 = myth ? spot.y : rnd(HOR + 3, S0 - 3);
     const depth = (y0 - HOR) / (S0 - HOR);
     const small = !myth && depth < 0.38;
     const g = 62;
@@ -170,8 +210,8 @@
     const vy0 = -Math.sqrt(2 * g * h);
     const dir = Math.random() < 0.5 ? -1 : 1;
     const f = {
-      x0: near ? near.x0 + rnd(-14, 14) : rnd(W * 0.08, W * 0.92),
-      y0: near ? Math.min(S0 - 8, Math.max(HOR + 10, near.y0 + rnd(-4, 4))) : y0,
+      x0: near ? near.x0 + rnd(-14, 14) : myth ? spot.x : rnd(W * 0.02, W * 0.98),
+      y0: near ? Math.min(S0 - 3, Math.max(HOR + 3, near.y0 + rnd(-4, 4))) : y0,
       vx: dir * rnd(7, 14), vy0, g, t: 0, dur: (-2 * vy0) / g,
       sp: myth ? MYTHS[(Math.random() * MYTHS.length) | 0] : SPRITES[(Math.random() * SPRITES.length) | 0], small: near ? near.small : small, entered: false,
     };
@@ -215,21 +255,20 @@
   function drawKraken(k, foam) {
     const a = k.age, L = k.life, ease = (t) => t * t * (3 - 2 * t), cl = (t) => Math.max(0, Math.min(1, t));
     const base = k.base, px = (x, y, col) => { if (y <= base) put(x, y, col); };
-    const HS = [26, 36, 22, 40, 25, 33, 21];
+    const HS = [17, 24, 14, 26, 16, 22, 14];
     for (let i = 0; i < 7; i++) {
       const r = ease(cl((a - i * 0.2) / 1.7)) * ease(cl((L - a - (6 - i) * 0.15) / 1.7));
       if (r < 0.03) continue;
-      const bx = Math.round(k.x + (i - 3) * 8 + Math.sin(i * 2.1) * 2), dir = i % 2 ? 1 : -1, H = HS[i] * r;
-      if (!k['in' + i] && r > 0.3) { k['in' + i] = true; splash(bx, base, 5, 1); }
+      const bx = Math.round(k.x + (i - 3) * 6 + Math.sin(i * 2.1) * 1.5), dir = i % 2 ? 1 : -1, H = HS[i] * r;
+      if (!k['in' + i] && r > 0.3) { k['in' + i] = true; splash(bx, base, 3, 1); }
       for (let n = 0; n <= 44; n++) {
-        const s = n / 44, sway = Math.sin(a * 2.5 + i * 1.7 + s * 5) * (1.5 + s * 5);
-        const x = Math.round(bx + sway + dir * s * s * s * 9 * r), y = Math.round(base - s * H);
-        const t = s < 0.25 ? 6 : s < 0.5 ? 5 : s < 0.75 ? 4 : s < 0.92 ? 3 : 2, col = i % 2 ? KC.body : KC.dark;
+        const s = n / 44, sway = Math.sin(a * 2.5 + i * 1.7 + s * 5) * (1 + s * 3.2);
+        const x = Math.round(bx + sway + dir * s * s * s * 6 * r), y = Math.round(base - s * H);
+        const t = s < 0.3 ? 4 : s < 0.6 ? 3 : s < 0.85 ? 2 : 1, col = i % 2 ? KC.body : KC.dark;
         for (let dy = 0; dy < 2; dy++) for (let dx = -(t >> 1); dx < (t + 1 >> 1); dx++) px(x + dx, y + dy, dx === -(t >> 1) ? KC.dark : col);
-        if (n % 5 === 3 && t > 3) px(x + dir, y + 1, KC.sucker);
-        if (n % 9 === 1 && t > 3) px(x, y, KC.light);
+        if (n % 6 === 3 && t > 2) px(x + dir, y + 1, KC.sucker);
       }
-      for (let dx = -5; dx <= 5; dx++) if ((dx + Math.floor(a * 6) + i) % 3 !== 0) blend(bx + dx, base, foam, 0.55 * r);   // churned water at the base
+      for (let dx = -3; dx <= 3; dx++) if ((dx + Math.floor(a * 6) + i) % 3 !== 0) blend(bx + dx, base, foam, 0.5 * r);   // churned water at the base
     }
   }
 
@@ -331,6 +370,19 @@
       }
     }
 
+    /* lighthouse: on the horizon, lantern and sweeping beam at night */
+    {
+      const lit = p.stars > 0.35, top = HOR + 3 - LH.length + 1, left = lhX - 7;
+      for (let y = 0; y < LH.length; y++) for (let x = 0; x < LH[0].length; x++) if (LH[y][x]) put(left + x, top + y, LH[y][x]);
+      const lc = lit ? [255, 243, 170] : [200, 226, 232];
+      for (let y = 2; y < 4; y++) for (let x = 5; x < 9; x++) put(left + x, top + y, lc);
+      if (lit) {
+        const ph = Math.sin(clock * 0.8), dir = ph > 0 ? 1 : -1, str = Math.abs(ph);
+        for (let r = -4; r <= 4; r++) for (let q = -4; q <= 4; q++) { const d = Math.hypot(r, q); if (d < 4.5) blend(lhX + r, top + 3 + q, [255, 243, 170], 0.22 * (1 - d / 4.5)); }
+        for (let dx = 3; dx <= 60; dx++) { const spread = 1 + dx * 0.11; for (let dy = -spread; dy <= spread; dy++) blend(lhX + dir * dx, top + 3 + dy, [255, 243, 170], 0.26 * (1 - dx / 64) * str); }
+      }
+    }
+
     /* ripples */
     for (let i = ripples.length - 1; i >= 0; i--) {
       const r = ripples[i]; r.age += dtSec;
@@ -365,8 +417,8 @@
     }
 
     /* kraken: deep water only, and never while the pirate ship is out */
-    if (!kraken && !ship && !reduce) { nextKraken -= dtSec; if (nextKraken <= 0 && nextShip > 4) kraken = { x: rnd(W * 0.2, W * 0.8), base: HOR + rnd(26, 40), age: 0, life: 10 }; }
-    if (kraken) { kraken.age += dtSec; drawKraken(kraken, c.foam); if (!kraken.out && kraken.age > kraken.life - 2) { kraken.out = true; splash(kraken.x, kraken.base, 14, 1); ripples.push({ x: kraken.x, y: kraken.base, age: 0 }); } if (kraken.age > kraken.life) { kraken = null; nextKraken = rnd(60, 130); } }
+    if (!kraken && !ship && !reduce) { nextKraken -= dtSec; if (nextKraken <= 0 && nextShip > 4) { const sp = freeSpot(26, 28, 4, HOR + 26, HOR + 40); if (sp) kraken = { x: sp.x, base: sp.y, age: 0, life: 10 }; else nextKraken = 6; } }
+    if (kraken) { kraken.age += dtSec; drawKraken(kraken, c.foam); if (!kraken.out && kraken.age > kraken.life - 2) { kraken.out = true; splash(kraken.x, kraken.base, 8, 1); ripples.push({ x: kraken.x, y: kraken.base, age: 0 }); } if (kraken.age > kraken.life) { kraken = null; nextKraken = rnd(60, 130); } }
 
     /* shark fin patrol */
     if (!fin && !reduce) { nextFin -= dtSec; if (nextFin <= 0) { const d = Math.random() < 0.5 ? 1 : -1; fin = { x: d > 0 ? -8 : W + 8, y: HOR + 16 + Math.random() * 44, d, age: 0 }; nextFin = rnd(35, 60); } }

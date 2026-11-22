@@ -6,9 +6,9 @@
 (function () {
   const B = window.Beach;
   const PX = 4;            // css px per art pixel
-  const H = 134;           // art rows of the sea band (the hero text is laid out against this: 536px, see --sea-h in styles.css)
+  let H = 134;             // art rows of the sea band: sized in resize(): sky + sea reach the shoreline at 8/10 of the first screen
   const HOR = 24;          // horizon row
-  const S0 = 112;          // mean shoreline row
+  let S0 = 112;            // mean shoreline row (H - 22)
   const TIDE = 4.5;        // tide swing in rows
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const qs = new URLSearchParams(location.search);
@@ -45,7 +45,10 @@
     W = Math.max(60, Math.ceil(document.body.clientWidth / PX));
     // art row 0 (top of the sky band) sits at the top of the hero; the rows above it are extra sky behind the nav
     OFF = hero ? Math.max(0, Math.round((hero.getBoundingClientRect().top + window.scrollY) / PX)) : 0;
+    H = Math.max(134, Math.min(320, Math.round(0.8 * innerHeight / PX) - OFF + 22)); S0 = H - 22;   // the shoreline sits at 8/10 of the screen
     rows = OFF + H;
+    // the hero is as tall as the first screen: sea down to 8/10, shoreline and sand for the last 2/10
+    document.documentElement.style.setProperty('--hero-h', Math.max(H * PX, innerHeight - OFF * PX - 4) + 'px');
     canvas.width = W; canvas.height = rows;
     canvas.style.height = rows * PX + 'px';
     bottomPx = rows * PX;

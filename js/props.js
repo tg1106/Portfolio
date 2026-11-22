@@ -1,4 +1,4 @@
-/* Sand grain, pixel-art beach props (castles, ball, umbrella...), crab, and the tech-logo marquees. */
+/* Sand grain, pixel-art beach props (castles, ball, umbrella...), sand drawings, and the tech-logo marquees. */
 (function () {
   const B = window.Beach;
   const SCALE = 5;
@@ -250,16 +250,6 @@
       });
     },
   };
-  const CRAB = [
-    mkCrab(false), mkCrab(true),
-  ];
-  function mkCrab(b) {
-    const rows = b
-      ? ['X.......X', 'XX.....XX', '.X.X.X.X.', '..XXXXX..', '.XXXXXXX.', '..XXXXX..', 'X.XX.XX.X', '.XX...XX.']
-      : ['X.......X', 'XX.....XX', '.X.X.X.X.', '..XXXXX..', '.XXXXXXX.', '..XXXXX..', '.XX...XX.', 'XX.....XX'];
-    return fromMap(rows, { X: '#ec714c' });
-  }
-
   /* ---------- scatter: props land at random spots on free sand ----------
      A spot is free when it is below the sea, above the contact panel, and clear of every piece of
      content (text, buttons, cards, photo...) plus a margin, so nothing ever sits behind or under a component. */
@@ -287,8 +277,51 @@
   const eduWrap = document.querySelector('.edu-wrap');
   if (eduWrap) addProp('grove', 3, eduWrap, true).el.classList.add('edu-grove');
 
-  const TEXT = 'h1, h2, .lede, .byline, .sec-head p, .pass p, .foot p';            // measured by their text, not their full-width box
-  const BOXES = '.nav, .pill, .btn, .letter, .deck-wrap, .cards > *, .stats li, .rows li, .qa details, .about-photo, .about-lane, .socials, .heat-panel, .edu, .tabs, .walkman, .wm-listen, .book, .diary-nav, .edu-grove, .cta, .foot .links, .logo';
+  /* ---------- section dividers: an uneven line drawn in the sand (a groove with a pale lip on its lower side) ---------- */
+  const lines = [];
+  document.querySelectorAll('main > section:not(.hero):not(.cta)').forEach((sec, n) => {
+    const box = Object.assign(document.createElement('div'), { className: 'sand-line' }), cv = document.createElement('canvas');
+    box.setAttribute('aria-hidden', 'true'); box.append(cv);
+    sec.before(box);
+    lines.push({ cv, n, w: 0, groove: [], pebbles: [] });
+  });
+  // colours come from the current time-of-day sand: the groove is a darker sand, the lip a lighter one
+  let sandNow = '';
+  const toRgb = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
+  const tone = (rgb, to, t) => 'rgb(' + rgb.map((v, i) => Math.round(v + (to - v) * t)).join(',') + ')';
+  function paintLines() {
+    const sand = document.documentElement.style.getPropertyValue('--sand').trim() || '#f6e6c4';
+    const rgb = toRgb(sand), lip = tone(rgb, 255, 0.45), dark = tone(rgb, 0, 0.32), pebble = tone(rgb, 0, 0.42);
+    lines.forEach((L) => {
+      const g = L.cv.getContext('2d'), has = new Set(L.groove.map(([x, y]) => x + ',' + y));
+      g.clearRect(0, 0, L.w, 6);
+      g.fillStyle = lip; L.groove.forEach(([x, y]) => { if (!has.has(x + ',' + (y + 1))) g.fillRect(x, y + 1, 1, 1); });
+      g.fillStyle = dark; L.groove.forEach(([x, y]) => g.fillRect(x, y, 1, 1));
+      g.fillStyle = pebble; L.pebbles.forEach(([x, y]) => g.fillRect(x, y, 1, 1));
+    });
+    sandNow = sand;
+  }
+  function drawLines() {
+    lines.forEach((L) => {
+      const w = Math.max(20, Math.floor(L.cv.parentElement.clientWidth / 4));
+      if (w === L.w) return;
+      L.w = w; L.cv.width = w; L.cv.height = 6;
+      let seed = L.n * 7919 + 17; const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+      L.groove = []; L.pebbles = [];
+      let y = 2 + Math.floor(rnd() * 2), skip = 0;
+      for (let x = 0; x < w; x++) {
+        if (rnd() < 0.13) y = Math.max(1, Math.min(4, y + (rnd() < 0.5 ? -1 : 1)));
+        if (skip > 0) skip--; else if (rnd() < 0.015) skip = 2 + Math.floor(rnd() * 4);   // now and then the line breaks
+        if (!skip) { L.groove.push([x, y]); if (rnd() < 0.22) L.groove.push([x, y + 1]); }
+        if (rnd() < 0.02) { const py = y + (rnd() < 0.5 ? -2 : 2); if (py >= 0 && py < 6) L.pebbles.push([x, py]); }
+      }
+    });
+    paintLines();
+  }
+  drawLines();
+
+  const TEXT = 'h1, h2, .about-name, .lede, .byline, .sec-head p, .pass p, .foot p';            // measured by their text, not their full-width box
+  const BOXES = '.nav, .pill, .btn, .letter, .deck-wrap, .cards > *, .stats li, .rows li, .qa details, .about-photo, .socials, .heat-panel, .edu, .tabs, .walkman, .wm-listen, .book, .diary-nav, .edu-grove, .sand-line, .cta, .foot .links, .logo';
   function layoutProps() {
     const sy = window.scrollY, body = document.body;
     layer.style.height = body.offsetHeight + 'px';
@@ -331,7 +364,7 @@
       p.el.style.setProperty('--w', src.width * p.scale + 'px');
     });
   }
-  setInterval(paint, 500); paint();
+  setInterval(() => { paint(); if ((document.documentElement.style.getPropertyValue('--sand').trim() || '') !== sandNow) paintLines(); }, 500); paint();
   if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
     setInterval(() => {
       if (document.hidden) return;
@@ -340,19 +373,11 @@
     }, 100);
   }
   let relayout = 0;
-  const schedule = () => { clearTimeout(relayout); relayout = setTimeout(layoutProps, 200); };
+  const schedule = () => { clearTimeout(relayout); relayout = setTimeout(() => { drawLines(); layoutProps(); }, 200); };
   new ResizeObserver(schedule).observe(document.body);
   addEventListener('load', schedule);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(schedule);
   layoutProps();
-
-  /* crab: two-frame scuttle */
-  document.querySelectorAll('.crab').forEach((cv) => {
-    cv.width = 9; cv.height = 8;
-    const g = cv.getContext('2d'); let f = 0;
-    const draw = () => { g.clearRect(0, 0, 9, 8); g.drawImage(CRAB[f ^= 1], 0, 0); };
-    draw(); setInterval(draw, 220);
-  });
 
   /* ---------- marquee: logo + name, blue plus between them, scrolling forever ---------- */
   document.querySelectorAll('.marquee[data-logos]').forEach((m) => {

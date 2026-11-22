@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Mona+Sans:wdth,wght@75..125,400..900&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20261124">
+  <link rel="stylesheet" href="styles.css?v=20261125">
 </head>
 <body>
   <!-- one page-tall pixel canvas: sea across the top, wrapping down both sides of the page -->
@@ -34,14 +34,6 @@
     <!-- hero: text sits over the sea canvas behind the page, sand below -->
     <section class="hero">
       <h1>Code that makes<br>people look twice.</h1>
-      <div class="hero-sand">
-        <p class="lede">I’m a builder at heart. I turn complex problems into thoughtful, lively digital experiences — and I keep the pixels moving.</p>
-        <ul class="stickers" aria-label="What I work with">
-          <li class="s1" data-chips="pytorch">Applied AI/ML</li>
-          <li class="s2" data-chips="nodedotjs">Back-end</li>
-          <li class="s3" data-chips="amazonwebservices">Cloud</li>
-        </ul>
-      </div>
     </section>
 
     <section id="about" class="block about">
@@ -83,7 +75,7 @@
               <p class="pc-post">Project · AI / ML · 2026</p>
               <h3>[AI/ML project name]</h3>
               <p class="pc-text">[One line on the system you built and what you learned about how it really works.]</p>
-              <a class="more" href="#">View case study <span aria-hidden="true">↗</span></a>
+              <div class="pc-links"><a class="more" href="https://github.com/tg1106" target="_blank" rel="noopener">GitHub <span aria-hidden="true">↗</span></a><a class="more" href="#" target="_blank" rel="noopener">Live link <span aria-hidden="true">↗</span></a></div>
               <p class="tech-label">Tech Stack Used:</p>
               <div class="marquee" data-logos="python,pytorch,scikitlearn"></div>
             </div>
@@ -95,7 +87,7 @@
               <p class="pc-post">Research · AI / ML · 2026</p>
               <h3>[Research title]</h3>
               <p class="pc-text">[One line on the question you explored and what you found.]</p>
-              <a class="more" href="#">View paper <span aria-hidden="true">↗</span></a>
+              <div class="pc-links"><a class="more" href="https://github.com/tg1106" target="_blank" rel="noopener">GitHub <span aria-hidden="true">↗</span></a><a class="more" href="#" target="_blank" rel="noopener">Paper <span aria-hidden="true">↗</span></a></div>
               <p class="tech-label">Tech Stack Used:</p>
               <div class="marquee" data-logos="python,jupyter,numpy"></div>
             </div>
@@ -113,7 +105,7 @@
               <p class="pc-post">Project · Web app · 2026</p>
               <h3>Tide / personal workspace</h3>
               <p class="pc-text">A calmer place for tasks, notes, and everything in between.</p>
-              <a class="more" href="#">View case study <span aria-hidden="true">↗</span></a>
+              <div class="pc-links"><a class="more" href="https://github.com/tg1106" target="_blank" rel="noopener">GitHub <span aria-hidden="true">↗</span></a><a class="more" href="#" target="_blank" rel="noopener">Live link <span aria-hidden="true">↗</span></a></div>
               <p class="tech-label">Tech Stack Used:</p>
               <div class="marquee" data-logos="react,typescript,supabase"></div>
             </div>
@@ -131,7 +123,7 @@
               <p class="pc-post">Project · Full-stack · 2026</p>
               <h3>Little wins / habit tracker</h3>
               <p class="pc-text">Small rituals. Meaningful progress. One good day at a time.</p>
-              <a class="more" href="#">View case study <span aria-hidden="true">↗</span></a>
+              <div class="pc-links"><a class="more" href="https://github.com/tg1106" target="_blank" rel="noopener">GitHub <span aria-hidden="true">↗</span></a><a class="more" href="#" target="_blank" rel="noopener">Live link <span aria-hidden="true">↗</span></a></div>
               <p class="tech-label">Tech Stack Used:</p>
               <div class="marquee" data-logos="react,nodedotjs,mongodb"></div>
             </div>
@@ -149,7 +141,7 @@
               <p class="pc-post">Project · Dashboard · 2026</p>
               <h3>Orbit / developer dashboard</h3>
               <p class="pc-text">Your repositories, activity, and daily momentum in one view.</p>
-              <a class="more" href="#">View case study <span aria-hidden="true">↗</span></a>
+              <div class="pc-links"><a class="more" href="https://github.com/tg1106" target="_blank" rel="noopener">GitHub <span aria-hidden="true">↗</span></a><a class="more" href="#" target="_blank" rel="noopener">Live link <span aria-hidden="true">↗</span></a></div>
               <p class="tech-label">Tech Stack Used:</p>
               <div class="marquee" data-logos="nextdotjs,tailwindcss,github"></div>
             </div>
@@ -161,7 +153,7 @@
               <p class="pc-post">Research · Data · 2026</p>
               <h3>[Data research title]</h3>
               <p class="pc-text">[One line on the data you studied and the pattern you found.]</p>
-              <a class="more" href="#">View paper <span aria-hidden="true">↗</span></a>
+              <div class="pc-links"><a class="more" href="https://github.com/tg1106" target="_blank" rel="noopener">GitHub <span aria-hidden="true">↗</span></a><a class="more" href="#" target="_blank" rel="noopener">Paper <span aria-hidden="true">↗</span></a></div>
               <p class="tech-label">Tech Stack Used:</p>
               <div class="marquee" data-logos="python,pandas,numpy"></div>
             </div>
@@ -269,7 +261,6 @@
         <p class="lede" id="gh-note"></p>
         <div class="heat-panel">
           <div class="heat-scroll">
-            <div class="heat-months" id="heat-months" aria-hidden="true"></div>
             <div class="heat" id="heat" role="img" aria-label="GitHub contribution calendar"></div>
           </div>
         </div>
@@ -352,11 +343,11 @@
     <p>© Tharun Gopinath 2026 · a little pixel paradise made by <span class="mk"><i data-logo="claude" data-brand></i>Claude</span>, <span class="mk"><img class="mk-logo" src="assets/diet-coke.svg" alt="Diet Coke" width="48" height="18"> diet coke</span> and <span class="mk"><svg class="heart" viewBox="0 0 9 8" shape-rendering="crispEdges" aria-hidden="true"><path fill="#e0463b" d="M1 0h2v1H1zM6 0h2v1H6zM0 1h4v1H0zM5 1h4v1H5zM0 2h9v2H0zM1 4h7v1H1zM2 5h5v1H2zM3 6h3v1H3zM4 7h1v1H4z"/></svg>love</span>.</p>
   </footer>
 
-  <script src="js/logos.js?v=20261124"></script>
-  <script src="js/theme.js?v=20261124"></script>
-  <script src="js/sea.js?v=20261124"></script>
-  <script src="js/props.js?v=20261124"></script>
-  <script src="js/harbor.js?v=20261124"></script>
+  <script src="js/logos.js?v=20261125"></script>
+  <script src="js/theme.js?v=20261125"></script>
+  <script src="js/sea.js?v=20261125"></script>
+  <script src="js/props.js?v=20261125"></script>
+  <script src="js/harbor.js?v=20261125"></script>
   <script>
     // logo-only chips for stickers and skill rows
     document.querySelectorAll('[data-chips]').forEach((el) => {
@@ -442,7 +433,7 @@
     // GitHub: the same rolling year GitHub shows on the profile. Reloads every 5 minutes.
     const GITHUB_USER = 'tg1106';
     (function () {
-      const heat = $('heat'), months = $('heat-months');
+      const heat = $('heat');
       const lvl = (n) => (n === 0 ? 0 : n < 4 ? 1 : n < 8 ? 2 : n < 12 ? 3 : 4);
       function sample() {
         const out = []; let s = 11; const rand = () => ((s = (s * 16807) % 2147483647) / 2147483647);
@@ -456,20 +447,25 @@
       function draw(days, total, note) {
         $('gh-total').textContent = total.toLocaleString();
         $('gh-note').textContent = note;
-        const pad = new Date(days[0].date + 'T00:00:00').getDay();
-        heat.innerHTML = '<i class="pad"></i>'.repeat(pad) + days.map((d) => `<i class="l${d.level}" title="${d.count} on ${d.date}"></i>`).join('');
-        heat.setAttribute('aria-label', `${total} GitHub contributions in the last year`);
-        const cols = Math.ceil((pad + days.length) / 7), seen = new Set();
-        let lastCol = -9;
-        heat.style.setProperty('--cols', cols); months.style.setProperty('--cols', cols);
-        months.innerHTML = days.map((d, i) => {
-          const key = d.date.slice(0, 7), col = Math.floor((pad + i) / 7);
-          if (seen.has(key)) return '';
-          seen.add(key);
-          if (col - lastCol < 3) return '';
-          lastCol = col;
-          return `<span style="grid-column:${col + 1}">${new Date(key + '-01T00:00:00').toLocaleString('en', { month: 'short' })}</span>`;
+        // one grid: weekday labels in column 1, month labels in row 1, one square per day (column = week, row = weekday)
+        const pad = new Date(days[0].date + 'T00:00:00').getDay(), cols = Math.ceil((pad + days.length) / 7);
+        const marks = [], seen = new Set();
+        const cells = days.map((d, i) => {
+          const k = pad + i, col = Math.floor(k / 7) + 2, key = d.date.slice(0, 7);
+          if (!seen.has(key)) { seen.add(key); marks.push({ col, key }); }
+          return `<i class="l${d.level}" style="grid-column:${col};grid-row:${k % 7 + 2}" title="${d.count} on ${d.date}"></i>`;
         }).join('');
+        let last = -9;
+        const labels = marks.filter((m, j) => {      // drop a month label that would touch its neighbour
+          const next = marks[j + 1];
+          if (m.col - last < 4 || (next && next.col - m.col < 3 && j === 0)) return false;
+          last = m.col; return true;
+        }).map((m) => `<span style="grid-column:${m.col};grid-row:1">${new Date(m.key + '-01T00:00:00').toLocaleString('en', { month: 'short' })}</span>`).join('');
+        const dows = ['Mon', 'Wed', 'Fri'].map((n, j) => `<span class="dow" style="grid-column:1;grid-row:${j * 2 + 3}">${n}</span>`).join('');
+        heat.style.setProperty('--cols', cols);
+        heat.innerHTML = labels + dows + cells;
+        heat.setAttribute('aria-label', `${total} GitHub contributions in the last year`);
+        if (window.layoutProps) window.layoutProps();
       }
       const demo = () => { const d = sample(); draw(d, d.reduce((a, x) => a + x.count, 0), 'Sample data: the live GitHub request failed. Is the page online?'); };
       const load = () => fetch(`https://github-contributions-api.jogruber.de/v4/${encodeURIComponent(GITHUB_USER)}?y=last`)

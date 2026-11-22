@@ -48,21 +48,15 @@ p { margin: 0; }
 .pill-dark { background: #252525; color: var(--lime); }
 
 /* ---------- hero: sea panel ---------- */
-.hero { --h1: clamp(44px, 7.4vw, 108px); position: relative; max-width: 1408px; margin: 4px auto 0; min-height: 900px; border-radius: 32px; overflow: hidden;
+.hero { --h1: clamp(44px, 7.4vw, 108px); position: relative; max-width: 1408px; margin: 4px auto 0; min-height: var(--sea-h); border-radius: 32px; overflow: hidden;
   padding: 72px clamp(24px, 5vw, 72px) 56px; }
 #sea { position: absolute; top: 0; left: 0; width: 100%; z-index: 0; display: block; image-rendering: pixelated; pointer-events: none; }
 .hero h1 { position: relative; z-index: 2; margin: 0; color: #fff; font: 800 var(--h1)/.95 var(--display); font-stretch: 112%; letter-spacing: -.04em; text-shadow: 0 4px 0 rgba(0,0,0,.14); }
-.hero-sand { position: relative; z-index: 2; margin-top: calc(var(--sea-h) - 72px - 1.9 * var(--h1) + 56px); display: grid; gap: 28px; justify-items: start; }
-.stickers { list-style: none; display: flex; gap: 14px; flex-wrap: wrap; margin: 12px 0 0; padding: 0; }
-.stickers li { display: inline-flex; align-items: center; gap: 10px; padding: 8px 18px 8px 8px; border-radius: 999px; color: #252525; font-weight: 600; font-size: 15px; box-shadow: var(--lift); }
-.stickers .s1 { background: var(--lav); transform: rotate(-4deg); }
-.stickers .s2 { background: var(--lime); transform: rotate(3deg); }
-.stickers .s3 { background: var(--yel); transform: rotate(-2deg); }
 
 /* ---------- blocks ---------- */
 .block { max-width: 1280px; margin: 0 auto; padding: 104px 20px 0; }
 .sec-head { margin-bottom: 48px; }
-.about { display: grid; grid-template-columns: minmax(0, 1fr) 120px minmax(0, 520px); gap: 0; align-items: center; }
+.about { padding-top: 40px; display: grid; grid-template-columns: minmax(0, 1fr) 120px minmax(0, 520px); gap: 0; align-items: center; }
 .about-copy { display: grid; gap: 28px; justify-items: start; }
 .about-copy .display { margin-top: 4px; }
 .about-photo { margin: 0; justify-self: start; width: 100%; max-width: 520px; }
@@ -118,6 +112,7 @@ html[data-night="1"] .postcard { filter: brightness(.84); }
 .pc-address h3 { margin: 0; font: 700 26px/30px var(--display); letter-spacing: -.01em; color: #252525; }
 .pc-address .pc-text { margin: 0; font-size: 16px; color: #555; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 .pc-address .more { margin: 0; font-size: 16px; color: #252525; }
+.pc-links { display: flex; gap: 22px; }
 .tech-label { margin: auto 0 6px; font-size: 14px; font-weight: 600; color: #252525; line-height: 20px; }
 .postcard .marquee { margin-top: 0; }
 .deck-ui { display: grid; justify-items: center; gap: 10px; }
@@ -149,7 +144,6 @@ html[data-night="1"] .postcard { filter: brightness(.84); }
 @keyframes run { to { transform: translateX(-50%); } }
 .chip { flex: none; display: grid; place-items: center; width: 34px; height: 34px; border-radius: 9px; background: #fff; box-shadow: 0 2px 0 rgba(0,0,0,.25); }
 .chip svg { width: 20px; height: 20px; }
-.stickers .chip { width: 30px; height: 30px; box-shadow: none; }
 .chip.named { display: inline-flex; align-items: center; width: auto; height: 38px; gap: 8px; padding: 0 16px 0 10px; border-radius: 12px; font-size: 15px; font-weight: 600; color: #252525; white-space: nowrap; }
 .chip.named svg { width: 20px; height: 20px; flex: none; }
 .chip.named b { font-weight: 600; }
@@ -245,11 +239,10 @@ html[data-night="1"] .edu { filter: brightness(.86); }
 /* ---------- track me: GitHub calendar ---------- */
 .heat-panel { padding: 22px 22px 16px; border-radius: 24px; background: #12312f; color: #e8f4ee; box-shadow: var(--lift); }
 .heat-scroll { overflow-x: auto; padding-bottom: 6px; }
-.heat-months, .heat { min-width: 760px; }
-.heat-months { display: grid; grid-template-columns: repeat(var(--cols, 53), 1fr); gap: 3px; height: 18px; font-size: 12px; color: #9fc5bb; }
-.heat { display: grid; grid-template-rows: repeat(7, auto); grid-auto-flow: column; grid-auto-columns: 1fr; gap: 3px; }
-.heat i { display: block; aspect-ratio: 1; border-radius: 3px; background: rgba(255,255,255,.09); }
-.heat i.pad { background: transparent; }
+.heat { --c: 17px; display: grid; grid-template-columns: 30px repeat(var(--cols, 53), var(--c)); grid-template-rows: 16px repeat(7, var(--c)); gap: 4px; width: max-content; }
+.heat i { display: block; border-radius: 3px; background: rgba(255,255,255,.09); }
+.heat span { font-size: 12px; line-height: 16px; color: #9fc5bb; white-space: nowrap; }
+.heat .dow { font-size: 11px; line-height: var(--c); }
 .heat i.l1 { background: #1f6f66; } .heat i.l2 { background: #2fa58f; }
 .heat i.l3 { background: #6fd8b5; } .heat i.l4 { background: #e0fd72; }
 
@@ -280,7 +273,7 @@ details p { margin-top: 14px; max-width: 60ch; color: var(--cmuted); }
 .cta .lede { color: var(--cmuted); }
 .harbor { position: absolute; inset: auto 0 0 0; height: 152px; pointer-events: none; }
 #harbor { display: block; width: 100%; image-rendering: pixelated; }
-.zoro { position: absolute; top: -64px; left: 0; width: 72px; height: 102px; image-rendering: pixelated; animation: stroll 38s linear infinite; }
+.zoro { position: absolute; top: -78px; left: 0; width: 72px; height: 102px; image-rendering: pixelated; animation: stroll 38s linear infinite; }
 @keyframes stroll { from { left: -90px; } to { left: 100%; } }
 .boat { position: absolute; right: 7%; bottom: 10px; width: 288px; height: 174px; animation: drift 18s ease-in-out infinite alternate; }
 .boat > *, .boat-in > * { position: absolute; left: 0; top: 0; image-rendering: pixelated; }
@@ -302,7 +295,7 @@ html[data-night="1"] .boat canvas, html[data-night="1"] .zoro { filter: brightne
 .foot .links { margin: 0; flex-wrap: wrap; color: var(--ink); }
 
 /* ---------- beach props ---------- */
-#beach-props { position: absolute; left: 0; top: 0; width: 100%; z-index: 1; pointer-events: none; }
+#beach-props { position: absolute; left: 0; top: 0; width: 100%; z-index: 0; pointer-events: none; }
 .prop { position: absolute; display: block; }
 .prop canvas { display: block; position: relative; image-rendering: pixelated; filter: brightness(var(--prop-b)) sepia(var(--prop-sepia)); }
 .prop .shadow { position: absolute; left: 0; bottom: -5px; width: var(--w, 60px); height: 14px; border-radius: 50%;
@@ -342,7 +335,6 @@ html[data-night="1"] .boat canvas, html[data-night="1"] .zoro { filter: brightne
 }
 @media (max-width: 600px) {
   .rows li { flex-direction: column; align-items: flex-start; }
-  .hero { min-height: 960px; }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }

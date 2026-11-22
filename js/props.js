@@ -270,7 +270,7 @@
   });
 
   const TEXT = 'h1, h2, .lede, .byline, .sec-head p, .pass p, .foot p';            // measured by their text, not their full-width box
-  const BOXES = '.nav, .pill, .btn, .stickers li, .letter, .deck-wrap, .cards > *, .stats li, .rows li, .qa details, .about-photo, .about-lane, .socials, .heat-panel, .edu, .tabs, .walkman, .wm-listen, .book, .diary-nav, .cta, .foot .links, .logo';
+  const BOXES = '.nav, .pill, .btn, .letter, .deck-wrap, .cards > *, .stats li, .rows li, .qa details, .about-photo, .about-lane, .socials, .heat-panel, .edu, .tabs, .walkman, .wm-listen, .book, .diary-nav, .cta, .foot .links, .logo';
   function layoutProps() {
     const sy = window.scrollY, body = document.body;
     layer.style.height = body.offsetHeight + 'px';

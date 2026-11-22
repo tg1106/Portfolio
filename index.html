@@ -7,8 +7,8 @@
   <meta name="description" content="A playful developer portfolio on a pixel beach that follows the time of day.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Mona+Sans:wdth,wght@75..125,400..900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Mona+Sans:wdth,wght@75..125,400..900&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=20261123">
 </head>
 <body>
   <!-- one page-tall pixel canvas: sea across the top, wrapping down both sides of the page -->
@@ -22,6 +22,7 @@
         <a href="#projects">Work</a>
         <a href="#skills">Skills</a>
         <a href="#certificates">Certificates</a>
+        <a href="#education">Education</a>
         <a href="#track">Track me</a>
         <a href="#faq">FAQs</a>
       </div>
@@ -187,7 +188,7 @@
         <li><span>Back-end &amp; APIs</span><em data-chips="nodedotjs,mongodb,supabase"></em></li>
         <li><span>Cloud foundations</span><em data-chips="amazonwebservices"></em></li>
         <li><span>Version control &amp; open source</span><em data-chips="github"></em></li>
-        <li><span>Creative exploration</span><em data-chips="meta"></em></li>
+        <li><span>AI Proficiency</span><em data-named data-chips="claude,codex,antigravity"></em></li>
       </ul>
     </section>
 
@@ -242,20 +243,77 @@
       </div>
     </section>
 
+    <section id="education" class="block">
+      <div class="sec-head">
+        <p class="pill">Education</p>
+        <h2 class="display">Where i<br>study</h2>
+      </div>
+      <article class="edu">
+        <div class="edu-logo-box"><img class="edu-logo" src="assets/vit-logo.svg" alt="Vellore Institute of Technology" width="372" height="100"></div>
+        <div class="edu-body">
+          <h3>B.Tech CSE</h3>
+          <p class="edu-years">2024 – 2028</p>
+          <p class="edu-school">VIT Chennai</p>
+        </div>
+      </article>
+    </section>
+
     <section id="track" class="block">
       <div class="sec-head">
         <p class="pill">Track me</p>
-        <h2 class="display"><span id="gh-total">…</span> contributions<br>in <span id="gh-year">2026</span></h2>
-        <p class="lede" id="gh-note">Loading my GitHub activity…</p>
-      </div>
-      <div class="heat-panel">
-        <div class="heat-scroll">
-          <div class="heat-months" id="heat-months" aria-hidden="true"></div>
-          <div class="heat" id="heat" role="img" aria-label="GitHub contribution calendar"></div>
+        <div class="tabs" role="tablist" aria-label="Track me">
+          <button class="tab" type="button" role="tab" data-tab="github" aria-selected="true">GitHub</button>
+          <button class="tab" type="button" role="tab" data-tab="spotify" aria-selected="false">Spotify</button>
+          <button class="tab" type="button" role="tab" data-tab="diary" aria-selected="false">Diary</button>
         </div>
-        <div class="heat-legend" aria-hidden="true">Less <i class="l0"></i><i class="l1"></i><i class="l2"></i><i class="l3"></i><i class="l4"></i> More</div>
-        <div class="gh-live"><span class="live"><i></i>Live</span><span id="gh-updated">connecting…</span></div>
-        <ul class="gh-feed" id="gh-feed" aria-live="polite"></ul>
+      </div>
+
+      <div class="tab-panel" id="tab-github" role="tabpanel">
+        <h2 class="display"><span id="gh-total">…</span> contributions<br>in the last year</h2>
+        <p class="lede" id="gh-note"></p>
+        <div class="heat-panel">
+          <div class="heat-scroll">
+            <div class="heat-months" id="heat-months" aria-hidden="true"></div>
+            <div class="heat" id="heat" role="img" aria-label="GitHub contribution calendar"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-panel" id="tab-spotify" role="tabpanel" hidden>
+        <h2 class="display">On my<br>walkman</h2>
+        <p class="lede" id="sp-note"></p>
+        <div class="walkman" id="walkman" data-state="paused">
+          <div class="wm-body">
+            <div class="wm-top"><span class="wm-brand">WALKMAN</span><span class="wm-led" aria-hidden="true"></span></div>
+            <div class="wm-window" aria-hidden="true">
+              <div class="reel"></div><div class="wm-tape"><i></i><i></i><i></i></div><div class="reel"></div>
+            </div>
+            <div class="wm-lcd">
+              <div class="wm-title"><span id="sp-title">…</span></div>
+              <div class="wm-artist" id="sp-artist"></div>
+              <div class="wm-time"><span id="sp-cur">0:00</span><div class="wm-bar" role="progressbar" aria-label="Song progress"><i id="sp-bar"></i></div><span id="sp-dur">0:00</span></div>
+            </div>
+            <div class="wm-keys" aria-hidden="true"><i>◀◀</i><i>▶</i><i>■</i><i>▶▶</i></div>
+          </div>
+          <a class="wm-listen" id="sp-listen" href="https://open.spotify.com" target="_blank" rel="noopener">Listen with me</a>
+        </div>
+      </div>
+
+      <div class="tab-panel" id="tab-diary" role="tabpanel" hidden>
+        <h2 class="display">Dear<br>diary</h2>
+        <div class="diary">
+          <div class="book" id="book" data-open="false">
+            <div class="pg pg-l" id="pg-l"></div>
+            <div class="pg pg-r" id="pg-r"></div>
+            <div class="leaf" id="leaf"><div class="face front"></div><div class="face back"></div></div>
+            <div class="cover" id="cover"><div class="cover-front"><span>Tharun’s</span><b>Diary</b></div><div class="cover-in"></div></div>
+          </div>
+          <div class="diary-nav">
+            <button type="button" id="d-prev" aria-label="Previous day">‹</button>
+            <span id="d-label"></span>
+            <button type="button" id="d-next" aria-label="Next day">›</button>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -293,21 +351,21 @@
 
   <footer class="foot">
     <a class="logo" href="#top">yn.<sup>®</sup></a>
-    <div class="links"><a href="#about">About</a><a href="#projects">Work</a><a href="#skills">Skills</a><a href="#certificates">Certificates</a><a href="#track">Track me</a><a href="#faq">FAQs</a><a href="#contact">Contact</a></div>
+    <div class="links"><a href="#about">About</a><a href="#projects">Work</a><a href="#skills">Skills</a><a href="#certificates">Certificates</a><a href="#education">Education</a><a href="#track">Track me</a><a href="#faq">FAQs</a><a href="#contact">Contact</a></div>
     <p>© Tharun Gopinath 2026 · a little pixel paradise made by <span class="mk"><i data-logo="claude" data-brand></i>Claude</span>, <span class="mk"><img class="mk-logo" src="assets/diet-coke.svg" alt="Diet Coke" width="48" height="18"> diet coke</span> and <span class="mk"><svg class="heart" viewBox="0 0 9 8" shape-rendering="crispEdges" aria-hidden="true"><path fill="#e0463b" d="M1 0h2v1H1zM6 0h2v1H6zM0 1h4v1H0zM5 1h4v1H5zM0 2h9v2H0zM1 4h7v1H1zM2 5h5v1H2zM3 6h3v1H3zM4 7h1v1H4z"/></svg>love</span>.</p>
   </footer>
 
-  <script src="js/logos.js"></script>
-  <script src="js/theme.js"></script>
-  <script src="js/sea.js"></script>
-  <script src="js/props.js"></script>
-  <script src="js/harbor.js"></script>
+  <script src="js/logos.js?v=20261123"></script>
+  <script src="js/theme.js?v=20261123"></script>
+  <script src="js/sea.js?v=20261123"></script>
+  <script src="js/props.js?v=20261123"></script>
+  <script src="js/harbor.js?v=20261123"></script>
   <script>
     // logo-only chips for stickers and skill rows
     document.querySelectorAll('[data-chips]').forEach((el) => {
       el.insertAdjacentHTML('beforeend', el.dataset.chips.split(',').map((n) => {
         const L = LOGOS[n];
-        return `<span class="chip" title="${L.title}"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="${L.color}" d="${L.d}"/></svg></span>`;
+        return `<span class="chip${el.hasAttribute('data-named') ? ' named' : ''}" title="${L.title}"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="${L.color}" d="${L.d}"/></svg>${el.hasAttribute('data-named') ? '<b>' + L.title + '</b>' : ''}</span>`;
       }).join(''));
     });
     Beach.sea.start();
@@ -369,63 +427,168 @@
       el.insertAdjacentHTML('beforeend', `<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="${el.hasAttribute('data-brand') ? L.color : 'currentColor'}" d="${L.d}"/></svg>`);
     });
 
-    // GitHub activity, live: the calendar reloads every 5 minutes and the latest public events every minute.
+    // ---------- Track me: GitHub, Spotify walkman, diary ----------
+    const $ = (id) => document.getElementById(id);
+    const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+    const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+    const tabs = [...document.querySelectorAll('.tab')];
+    const panels = { github: $('tab-github'), spotify: $('tab-spotify'), diary: $('tab-diary') };
+    function openTab(name) {
+      tabs.forEach((t) => t.setAttribute('aria-selected', String(t.dataset.tab === name)));
+      for (const k in panels) panels[k].hidden = k !== name;
+      if (name === 'diary') diary.start();
+      if (name === 'spotify') spotify.poll();
+    }
+    tabs.forEach((t) => t.addEventListener('click', () => openTab(t.dataset.tab)));
+
+    // GitHub: the same rolling year GitHub shows on the profile. Reloads every 5 minutes.
     const GITHUB_USER = 'tg1106';
     (function () {
-      const year = new Date().getFullYear(), heat = document.getElementById('heat'), months = document.getElementById('heat-months');
-      const feed = document.getElementById('gh-feed'), upd = document.getElementById('gh-updated');
-      document.getElementById('gh-year').textContent = year;
+      const heat = $('heat'), months = $('heat-months');
       const lvl = (n) => (n === 0 ? 0 : n < 4 ? 1 : n < 8 ? 2 : n < 12 ? 3 : 4);
-      const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-      const stamp = () => { upd.textContent = 'updated ' + new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', second: '2-digit' }); };
       function sample() {
         const out = []; let s = 11; const rand = () => ((s = (s * 16807) % 2147483647) / 2147483647);
-        for (let d = new Date(year, 0, 1); d.getFullYear() === year; d.setDate(d.getDate() + 1)) {
-          const wk = d.getDay() % 6 !== 0, n = d > new Date() ? 0 : Math.round(rand() * rand() * (wk ? 14 : 6));
+        for (let i = 365; i >= 0; i--) {
+          const d = new Date(); d.setDate(d.getDate() - i);
+          const n = Math.round(rand() * rand() * (d.getDay() % 6 !== 0 ? 14 : 6));
           out.push({ date: d.toISOString().slice(0, 10), count: n, level: lvl(n) });
         }
         return out;
       }
       function draw(days, total, note) {
-        document.getElementById('gh-total').textContent = total.toLocaleString();
-        document.getElementById('gh-note').textContent = note;
+        $('gh-total').textContent = total.toLocaleString();
+        $('gh-note').textContent = note;
         const pad = new Date(days[0].date + 'T00:00:00').getDay();
         heat.innerHTML = '<i class="pad"></i>'.repeat(pad) + days.map((d) => `<i class="l${d.level}" title="${d.count} on ${d.date}"></i>`).join('');
-        heat.setAttribute('aria-label', `${total} GitHub contributions in ${year}`);
+        heat.setAttribute('aria-label', `${total} GitHub contributions in the last year`);
         const cols = Math.ceil((pad + days.length) / 7), seen = new Set();
+        let lastCol = -9;
         heat.style.setProperty('--cols', cols); months.style.setProperty('--cols', cols);
         months.innerHTML = days.map((d, i) => {
-          const m = d.date.slice(5, 7); if (seen.has(m)) return ''; seen.add(m);
-          return `<span style="grid-column:${Math.floor((pad + i) / 7) + 1}">${new Date(year, +m - 1, 1).toLocaleString('en', { month: 'short' })}</span>`;
+          const key = d.date.slice(0, 7), col = Math.floor((pad + i) / 7);
+          if (seen.has(key)) return '';
+          seen.add(key);
+          if (col - lastCol < 3) return '';
+          lastCol = col;
+          return `<span style="grid-column:${col + 1}">${new Date(key + '-01T00:00:00').toLocaleString('en', { month: 'short' })}</span>`;
         }).join('');
       }
-      const demo = () => { const d = sample(); draw(d, d.reduce((a, x) => a + x.count, 0), 'Sample data, the live GitHub request failed. Is the page online?'); upd.textContent = 'offline'; };
-      const ago = (t) => { const s = Math.max(1, (Date.now() - new Date(t)) / 1000); return s < 90 ? 'just now' : s < 3600 ? Math.round(s / 60) + ' min ago' : s < 86400 ? Math.round(s / 3600) + ' h ago' : Math.round(s / 86400) + ' d ago'; };
-      function line(e) {
-        const repo = esc(e.repo.name.replace(GITHUB_USER + '/', '')), p = e.payload || {};
-        switch (e.type) {
-          case 'PushEvent': { const n = p.size || (p.commits && p.commits.length) || 1; return `Pushed ${n} commit${n > 1 ? 's' : ''} to ${repo}`; }
-          case 'CreateEvent': return `Created ${esc(p.ref_type)} ${esc(p.ref || repo)}`;
-          case 'PullRequestEvent': return `${esc(p.action)} a pull request in ${repo}`;
-          case 'IssuesEvent': return `${esc(p.action)} an issue in ${repo}`;
-          case 'WatchEvent': return `Starred ${repo}`;
-          case 'ForkEvent': return `Forked ${repo}`;
-          case 'IssueCommentEvent': return `Commented in ${repo}`;
-          default: return `${esc(e.type.replace('Event', ''))} in ${repo}`;
-        }
-      }
-      const loadFeed = () => fetch(`https://api.github.com/users/${encodeURIComponent(GITHUB_USER)}/events/public?per_page=8`)
+      const demo = () => { const d = sample(); draw(d, d.reduce((a, x) => a + x.count, 0), 'Sample data: the live GitHub request failed. Is the page online?'); };
+      const load = () => fetch(`https://github-contributions-api.jogruber.de/v4/${encodeURIComponent(GITHUB_USER)}?y=last`)
         .then((r) => r.json())
-        .then((ev) => { feed.innerHTML = ev.slice(0, 6).map((e) => `<li><span>${line(e)}</span><time datetime="${e.created_at}">${ago(e.created_at)}</time></li>`).join('') || '<li><span>No public activity yet</span></li>'; stamp(); })
-        .catch(() => { upd.textContent = 'feed unavailable'; });
-      const loadCalendar = () => fetch(`https://github-contributions-api.jogruber.de/v4/${encodeURIComponent(GITHUB_USER)}?y=${year}`)
-        .then((r) => r.json())
-        .then((j) => { draw(j.contributions, (j.total && j.total[year]) || j.contributions.reduce((a, x) => a + x.count, 0), `github.com/${GITHUB_USER}`); stamp(); })
+        .then((j) => draw(j.contributions, (j.total && (j.total.lastYear || Object.values(j.total)[0])) || j.contributions.reduce((a, x) => a + x.count, 0), `github.com/${GITHUB_USER}`))
         .catch(() => { if (!heat.children.length) demo(); });
       if (!GITHUB_USER) return demo();
-      loadCalendar(); loadFeed();
-      setInterval(loadFeed, 60000); setInterval(loadCalendar, 300000);
-      document.addEventListener('visibilitychange', () => { if (!document.hidden) { loadFeed(); loadCalendar(); } });
+      load();
+      setInterval(load, 300000);
+      document.addEventListener('visibilitychange', () => { if (!document.hidden) load(); });
+    })();
+
+    // Spotify walkman. NOW_PLAYING_URL is a small serverless function (api/now-playing.js) that holds the Spotify credentials;
+    // until it is deployed the walkman plays a sample track.
+    const NOW_PLAYING_URL = '/api/now-playing';
+    const spotify = (function () {
+      const wm = $('walkman'), title = $('sp-title'), artist = $('sp-artist'), cur = $('sp-cur'), dur = $('sp-dur'), bar = $('sp-bar'), listen = $('sp-listen'), note = $('sp-note');
+      const DEMO = { isPlaying: true, title: 'Sample song', artist: 'Spotify is not connected yet', durationMs: 214000, id: null, url: 'https://open.spotify.com' };
+      let track = null, polledAt = 0, demo = true;
+      const fmt = (ms) => { const s = Math.max(0, Math.round(ms / 1000)); return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`; };
+      const progress = () => (demo ? Date.now() % track.durationMs : Math.min(track.durationMs, track.progressMs + (track.isPlaying ? Date.now() - polledAt : 0)));
+      function paint() {
+        if (!track || panels.spotify.hidden) return;
+        const p = progress();
+        cur.textContent = fmt(p); dur.textContent = fmt(track.durationMs); bar.style.width = (p / track.durationMs * 100).toFixed(1) + '%';
+        wm.dataset.state = track.isPlaying ? 'playing' : 'paused';
+      }
+      function show() {
+        title.textContent = track.title; artist.textContent = track.artist;
+        title.classList.toggle('scroll', title.scrollWidth > title.parentElement.clientWidth);
+        listen.href = track.url || 'https://open.spotify.com';
+        note.textContent = demo ? 'Sample track. My Spotify is not connected yet (see api/now-playing.js).' : track.isPlaying ? 'Playing right now.' : 'Not playing at the moment. This is the last song I played.';
+        paint();
+      }
+      async function poll() {
+        try {
+          const r = await fetch(NOW_PLAYING_URL, { cache: 'no-store' });
+          if (!r.ok) throw new Error('no api');
+          const j = await r.json();
+          if (!j.title) throw new Error('empty');
+          track = j; demo = false; polledAt = Date.now();
+        } catch (e) { track = DEMO; demo = true; }
+        show();
+      }
+      // Listen with me: ask the Spotify app to play this exact song; if the app does not take over, open it on the web.
+      listen.addEventListener('click', (e) => {
+        if (!track || !track.id) return;
+        e.preventDefault();
+        location.href = `spotify:track:${track.id}:play`;
+        setTimeout(() => { if (document.hasFocus() && !document.hidden) window.open(track.url, '_blank', 'noopener'); }, 900);
+      });
+      setInterval(paint, 500);
+      setInterval(() => { if (!panels.spotify.hidden && !document.hidden) poll(); }, 15000);
+      return { poll };
+    })();
+
+    // Diary: the cover swings open, a few pages riffle by and it settles on today; arrows turn to the previous or next day.
+    const DIARY = {   // 'YYYY-MM-DD': the entry for that day. Add your own here.
+      [(() => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; })()]:
+        'Sample entry: built a little pixel beach today, with a kraken that only shows its arms and a lighthouse that turns. Replace this with your own words.',
+    };
+    const diary = (function () {
+      const book = $('book'), pl = $('pg-l'), pr = $('pg-r'), leaf = $('leaf'), front = leaf.querySelector('.front'), back = leaf.querySelector('.back');
+      const prev = $('d-prev'), next = $('d-next'), label = $('d-label'), DAY = 864e5, MAX_BACK = 400;
+      const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const iso = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+      const today = () => { const d = new Date(); d.setHours(0, 0, 0, 0); return d; };
+      const shift = (d, n) => { const x = new Date(d); x.setDate(x.getDate() + n); return x; };
+      const SUN = '<svg class="dl-ico" viewBox="0 0 11 11" shape-rendering="crispEdges" aria-hidden="true"><path fill="#f2c14e" d="M4 3h3v1h1v3H7v1H4V7H3V4h1z"/><path fill="#ec714c" d="M5 0h1v2H5zM5 9h1v2H5zM0 5h2v1H0zM9 5h2v1H9zM2 2h1v1H2zM8 2h1v1H8zM2 8h1v1H2zM8 8h1v1H8z"/></svg>';
+      const left = (d) => `<div class="dl"><span class="dl-wd">${d.toLocaleString('en', { weekday: 'long' })}</span><b class="dl-day">${d.getDate()}</b><span class="dl-my">${d.toLocaleString('en', { month: 'long' })} ${d.getFullYear()}</span>${SUN}</div>`;
+      const right = (d) => { const t = DIARY[iso(d)]; return `<div class="dr${t ? '' : ' empty'}"><p>${esc(t || '[No entry for this day yet.]')}</p></div>`; };
+      let cur = today(), busy = false;
+      function spread(d) {
+        cur = d; pl.innerHTML = left(d); pr.innerHTML = right(d);
+        label.textContent = d.toLocaleString('en', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+        next.disabled = iso(d) >= iso(today()); prev.disabled = (today() - d) / DAY >= MAX_BACK;
+      }
+      // Turn one page. dir > 0: the right page lifts and lands on the left. dir < 0: the left page lifts and lands on the right.
+      function flip(dir, ms, from, to) {
+        return new Promise((done) => {
+          leaf.style.transition = 'none';
+          leaf.style.display = 'block';
+          if (dir > 0) {
+            front.innerHTML = right(from); back.innerHTML = left(to);
+            leaf.style.transform = 'rotateY(0deg)'; pr.innerHTML = right(to);
+          } else {
+            front.innerHTML = right(to); back.innerHTML = left(from);
+            leaf.style.transform = 'rotateY(-180deg)'; pl.innerHTML = left(to);
+          }
+          void leaf.offsetWidth;
+          leaf.style.transition = `transform ${ms}ms ease-in-out`;
+          leaf.style.transform = dir > 0 ? 'rotateY(-180deg)' : 'rotateY(0deg)';
+          setTimeout(() => { pl.innerHTML = left(to); pr.innerHTML = right(to); leaf.style.display = 'none'; cur = to; spread(to); done(); }, reduce ? 0 : ms + 30);
+        });
+      }
+      async function start() {
+        if (busy) return;
+        busy = true;
+        const cover = $('cover');
+        cover.style.transition = 'none'; book.classList.remove('settled'); book.dataset.open = 'false';
+        spread(shift(today(), -3));
+        void book.offsetWidth;
+        cover.style.transition = '';
+        await wait(reduce ? 0 : 350);
+        book.dataset.open = 'true';
+        await wait(reduce ? 0 : 1300);
+        book.classList.add('settled');
+        for (let i = 3; i > 0 && !reduce; i--) await flip(1, 260, shift(today(), -i), shift(today(), 1 - i));   // riffle forward to today
+        spread(today());
+        busy = false;
+      }
+      const go = async (n) => { if (busy) return; const to = shift(cur, n); busy = true; await flip(n, 650, cur, to); busy = false; };
+      prev.addEventListener('click', () => go(-1));
+      next.addEventListener('click', () => go(1));
+      $('cover').addEventListener('click', () => { if (book.dataset.open === 'false') start(); });
+      spread(today());
+      return { start };
     })();
   </script>
 </body>

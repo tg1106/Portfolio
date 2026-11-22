@@ -423,11 +423,25 @@
         const wx = Math.round(ship.x) - ship.d * (sw / 2 + q);
         blend(wx, base - 1 + (q >> 2), c.foam, 0.5 - q * 0.033);
       }
+      // sample the open water on the bow side (ahead of the wake) before the hull is drawn over it
+      const sx = Math.min(W - 1, Math.max(0, ship.d > 0 ? left + sw + 3 : left - 4)), level = HOR + 10, water = [];
+      for (let y = level - 4; y <= base + 4; y++) { const d = buf[(y + OFF) * W + sx]; water[y] = [d & 255, (d >> 8) & 255, (d >> 16) & 255]; }
       for (let y = 0; y < SHIP.length; y++) for (let x = 0; x < sw; x++) {
         const col = SHIP[y][ship.d > 0 ? x : sw - 1 - x];
         if (col) put(left + x, base - SHIP.length + 1 + y, col);
       }
-      for (let x = 0; x < sw; x += 2) blend(left + x, base + 1, c.foam, 0.45);   // waterline foam
+      // water laps over the lower hull: a wavy translucent layer, a foam crest, wash at bow and stern, a wobbling reflection
+      for (let x = left - 6; x < left + sw + 6; x++) {
+        const surf = level + Math.sin(x * 0.55 + ship.age * 2.6) * 0.9 + Math.sin(x * 0.19 - ship.age * 1.5) * 0.7, yi = Math.round(surf);
+        const onHull = x >= left + 3 && x < left + sw - 2;
+        if (onHull) {
+          for (let y = yi; y <= base + 1; y++) blend(x, y, water[y] || water[base], y === yi ? 0.55 : 0.8);
+          for (let y = base + 2; y <= base + 4; y++) if (hash(x >> 1, y, Math.floor(ship.age * 3)) > 0.35 + (y - base) * 0.12) blend(x, y, [74, 43, 18], 0.22);   // reflection
+        }
+        const crest = Math.sin(x * 0.5 + ship.age * 3) > -0.3;
+        if (onHull ? crest : hash(x, Math.floor(ship.age * 3), 5) > 0.55 && (x < left + 6 || x > left + sw - 5)) blend(x, yi, c.foam, onHull ? 0.9 : 0.7);
+        if (onHull && ((x + yi) & 1)) blend(x, yi + 1, c.foam, 0.5);
+      }
       if (ship.x < -30 || ship.x > W + 30) { ship = null; nextShip = rnd(45, 100); }
     }
 

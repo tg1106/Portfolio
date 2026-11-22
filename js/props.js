@@ -270,7 +270,7 @@
   });
 
   const TEXT = 'h1, h2, .lede, .byline, .sec-head p, .pass p, .foot p';            // measured by their text, not their full-width box
-  const BOXES = '.nav, .pill, .btn, .stickers li, .letter, .deck-wrap, .cards > *, .stats li, .rows li, .qa details, .about-photo, .about-lane, .socials, .heat-panel, .cta, .foot .links, .logo';
+  const BOXES = '.nav, .pill, .btn, .stickers li, .letter, .deck-wrap, .cards > *, .stats li, .rows li, .qa details, .about-photo, .about-lane, .socials, .heat-panel, .edu, .tabs, .walkman, .wm-listen, .book, .diary-nav, .cta, .foot .links, .logo';
   function layoutProps() {
     const sy = window.scrollY, body = document.body;
     layer.style.height = body.offsetHeight + 'px';
@@ -296,6 +296,7 @@
       taken.push({ l: p.x - 8, r: p.x + p.w + 8, t: p.y - 8, b: p.y + p.h + 8 });
     });
   }
+  window.layoutProps = layoutProps;
   let lastNight = null;
   function paint() {
     const night = document.documentElement.dataset.night === '1';

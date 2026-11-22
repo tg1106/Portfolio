@@ -156,13 +156,60 @@
       r(18, 13, 1, 3, SKD); r(17, 16, 3, 1, SKD);
       r(14, 17, 9, 2, HAIR); r(16, 20, 5, 1, MOUTH); r(15, 19, 1, 1, MOUTH); r(21, 19, 1, 1, MOUTH);
     });
-    // dark outline around the silhouette, like the other sprites
-    const g = c.getContext('2d'), d = g.getImageData(0, 0, 36, 42), a = d.data, solid = (x, y) => x >= 0 && y >= 0 && x < 36 && y < 42 && a[(y * 36 + x) * 4 + 3] > 0;
+    outline(c);
+    return c;
+  }
+  // dark outline around the silhouette, like the other sprites
+  function outline(c) {
+    const w = c.width, h = c.height, g = c.getContext('2d'), d = g.getImageData(0, 0, w, h), a = d.data;
+    const solid = (x, y) => x >= 0 && y >= 0 && x < w && y < h && a[(y * w + x) * 4 + 3] > 0;
     const edge = [];
-    for (let y = 0; y < 42; y++) for (let x = 0; x < 36; x++) if (!solid(x, y) && (solid(x + 1, y) || solid(x - 1, y) || solid(x, y + 1) || solid(x, y - 1))) edge.push((y * 36 + x) * 4);
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) if (!solid(x, y) && (solid(x + 1, y) || solid(x - 1, y) || solid(x, y + 1) || solid(x, y - 1))) edge.push((y * w + x) * 4);
     edge.forEach((i) => { a[i] = 38; a[i + 1] = 26; a[i + 2] = 24; a[i + 3] = 255; });
     g.putImageData(d, 0, 0);
+  }
+
+  /* ---------- Zoro strolling along the shore (24x34, faces right): green hair, three gold earrings, scar over the eye,
+     open white shirt, green haramaki, black trousers, three swords at the hip ---------- */
+  function zoroFrame(f) {
+    const c = mk(24, 34, (r) => {
+      const bob = f & 1 ? -1 : 0, leg = [4, 0, -4, 0][f];
+      const GRN = '#3f9d4b', GRD = '#2a7437', SKN = '#d9a066', SKS = '#b9824c', WHT = '#f0ece0', WHS = '#c9c4b2', BLK = '#22282a';
+      // swords: three scabbards slanting down and back from the left hip, gold guards, green hilts
+      [['#f2f2f2', 0], ['#15191a', 1], ['#3a3f45', 2]].forEach(([col, k]) => {
+        for (let i = 0; i < 11; i++) r(14 - i, 25 + bob + k + (i >> 1), 1, 1, col);
+        r(14, 24 + bob + k, 1, 2, '#e6b43c'); r(15, 24 + bob + k, 1, 1, GRN);
+      });
+      // legs and boots go over the swords (the swing is in x only; the body bobs above them)
+      r(10 - leg, 27, 4, 5, '#2e3638'); r(9 - leg, 31, 6, 2, '#15191a');
+      r(10 + leg, 27, 4, 5, BLK); r(9 + leg, 31, 6, 2, '#15191a');
+      // torso: white shirt, open chest with the scar, green haramaki
+      r(7, 14 + bob, 11, 10, WHT); r(7, 14 + bob, 2, 10, WHS);
+      r(11, 14 + bob, 4, 6, SKN); r(12, 15 + bob, 1, 5, '#8c4a3a');
+      r(7, 23 + bob, 11, 4, GRN); r(7, 25 + bob, 11, 1, GRD);
+      // arm swinging opposite to the front leg
+      const sw = leg ? (leg > 0 ? 1 : -1) : 0;
+      r(10 + sw * 2, 15 + bob, 4, 7, WHT); r(10 + sw * 2, 22 + bob, 4, 4, SKN); r(10 + sw * 2, 21 + bob, 4, 1, BLK);
+      // head, hair, ear with three gold rings, scarred eye
+      r(11, 12 + bob, 4, 2, SKS);
+      r(8, 4 + bob, 10, 9, SKN); r(8, 8 + bob, 2, 3, SKS);
+      r(7, 8 + bob, 1, 1, '#f2c14e'); r(7, 10 + bob, 1, 1, '#f2c14e'); r(8, 11 + bob, 1, 1, '#f2c14e');
+      r(7, 2 + bob, 12, 3, GRN); r(8, 1 + bob, 9, 1, GRN); r(7, 4 + bob, 3, 5, GRN);
+      r(9, 0 + bob, 2, 1, GRN); r(13, 0 + bob, 3, 1, GRN); r(17, 2 + bob, 2, 1, GRD); r(10, 5 + bob, 8, 1, GRD);
+      r(14, 7 + bob, 3, 1, '#14181a'); r(15, 6 + bob, 1, 3, '#a8402f');
+      r(18, 8 + bob, 1, 2, SKS); r(14, 11 + bob, 3, 1, '#7a3b2c');
+    });
+    outline(c);
     return c;
+  }
+  const zoroCv = document.querySelector('.zoro');
+  if (zoroCv) {
+    zoroCv.width = 24; zoroCv.height = 34;
+    const frames = [0, 1, 2, 3].map(zoroFrame), zg = zoroCv.getContext('2d');
+    let zs = 0;
+    const zshow = () => { zg.clearRect(0, 0, 24, 34); zg.drawImage(frames[zs % 4], 0, 0); };
+    zshow();
+    if (!reduce) setInterval(() => { zs++; zshow(); }, 190);
   }
   const meCv = document.querySelector('.boat-me');
   if (meCv) {

@@ -174,14 +174,20 @@
     return g;
   }
   const SHIP = buildShip();
-  // Lighthouse on a tiny island, far away on the horizon
+  // Lighthouse on a tiny island, far away on the horizon: tapered banded tower, gallery rail, glazed lantern room, conical roof
   function buildLighthouse() {
-    const w = 14, h = 22, g = Array.from({ length: h }, () => Array(w).fill(null));
+    const w = 16, h = 28, g = Array.from({ length: h }, () => Array(w).fill(null));
     const R = (x, y, ww, hh, c) => { for (let j = y; j < y + hh; j++) for (let i = x; i < x + ww; i++) if (g[j] && i >= 0 && i < w) g[j][i] = B.theme.hex(c); };
-    R(2, 19, 10, 1, '#6f9a52'); R(1, 20, 12, 1, '#8c8f98'); R(0, 21, 14, 1, '#6d7079'); R(4, 20, 3, 1, '#a9acb6');
-    for (let y = 6; y < 19; y++) { const x0 = y < 12 ? 5 : 4, x1 = y < 12 ? 9 : 10, red = Math.floor((y - 6) / 3) % 2; R(x0, y, x1 - x0, 1, red ? '#d9402e' : '#f6f1e2'); R(x1 - 1, y, 1, 1, red ? '#a52d1f' : '#d3cbb4'); }
-    R(3, 5, 8, 1, '#2c2c34'); R(4, 4, 6, 1, '#4a4a55');           // gallery
-    R(4, 1, 6, 1, '#d9402e'); R(5, 0, 4, 1, '#d9402e');            // roof
+    R(2, 25, 12, 1, '#6f9a52'); R(0, 26, 16, 1, '#8c8f98'); R(0, 27, 16, 1, '#6d7079'); R(5, 26, 4, 1, '#a9acb6'); R(11, 26, 3, 1, '#6d7079');   // island
+    R(3, 21, 3, 4, '#f6f1e2'); R(3, 20, 3, 1, '#a52d1f'); R(4, 23, 1, 2, '#4a2b12');                                                      // keeper's hut
+    for (let y = 10; y < 25; y++) {
+      const t = Math.floor((y - 10) / 8), x0 = 5 - t, x1 = 11 + t, red = Math.floor((y - 10) / 4) % 2;
+      R(x0, y, x1 - x0, 1, red ? '#d9402e' : '#f6f1e2'); R(x1 - 2, y, 2, 1, red ? '#a52d1f' : '#cfc7ae');
+    }
+    R(7, 14, 1, 2, '#2c2c34'); R(7, 18, 1, 2, '#2c2c34'); R(7, 22, 2, 3, '#4a2b12');                                                        // slit windows, door
+    R(3, 9, 10, 1, '#2c2c34'); R(4, 8, 8, 1, '#4a4a55'); [3, 5, 7, 9, 11].forEach((x) => R(x, 7, 1, 1, '#2c2c34'));                          // gallery and rail
+    R(5, 4, 6, 3, '#9fd3e0'); R(5, 4, 1, 4, '#2c2c34'); R(10, 4, 1, 4, '#2c2c34'); R(7, 4, 1, 3, '#2c2c34'); R(5, 4, 6, 1, '#2c2c34');       // lantern room
+    R(4, 3, 8, 1, '#d9402e'); R(5, 2, 6, 1, '#d9402e'); R(6, 1, 4, 1, '#a52d1f'); R(7, 0, 2, 1, '#2c2c34');                                 // roof and finial
     return g;
   }
   const LH = buildLighthouse();
@@ -370,16 +376,25 @@
       }
     }
 
-    /* lighthouse: on the horizon, lantern and sweeping beam at night */
+    /* lighthouse: on the horizon. At night the lantern turns: the beam is foreshortened when it points at or away from us
+       (a small bright glow that swells as it swings toward the viewer) and stretches out long and thin to the sides. */
     {
-      const lit = p.stars > 0.35, top = HOR + 3 - LH.length + 1, left = lhX - 7;
+      const lit = p.stars > 0.35, top = HOR + 3 - LH.length + 1, left = lhX - 8;
       for (let y = 0; y < LH.length; y++) for (let x = 0; x < LH[0].length; x++) if (LH[y][x]) put(left + x, top + y, LH[y][x]);
-      const lc = lit ? [255, 243, 170] : [200, 226, 232];
-      for (let y = 2; y < 4; y++) for (let x = 5; x < 9; x++) put(left + x, top + y, lc);
+      const lc = lit ? [255, 243, 170] : [159, 211, 224];
+      for (let y = 5; y < 7; y++) for (const x of [6, 8, 9]) put(left + x, top + y, lc);
       if (lit) {
-        const ph = Math.sin(clock * 0.8), dir = ph > 0 ? 1 : -1, str = Math.abs(ph);
-        for (let r = -4; r <= 4; r++) for (let q = -4; q <= 4; q++) { const d = Math.hypot(r, q); if (d < 4.5) blend(lhX + r, top + 3 + q, [255, 243, 170], 0.22 * (1 - d / 4.5)); }
-        for (let dx = 3; dx <= 60; dx++) { const spread = 1 + dx * 0.11; for (let dy = -spread; dy <= spread; dy++) blend(lhX + dir * dx, top + 3 + dy, [255, 243, 170], 0.26 * (1 - dx / 64) * str); }
+        const ly = top + 5, phi = clock * 0.9;
+        for (const sign of [1, -1]) {
+          const cx = sign * Math.cos(phi), sz = Math.max(0, sign * Math.sin(phi));            // sz: how much this beam faces the viewer
+          const len = 6 + 62 * Math.abs(cx), spread1 = 0.7 + len * (0.07 + 0.1 * sz), a0 = 0.2 + 0.34 * Math.pow(sz, 1.4), dir = cx >= 0 ? 1 : -1;
+          for (let d = 2; d <= len; d++) {
+            const sp = 0.7 + (spread1 - 0.7) * (d / len), fade = Math.pow(1 - d / len, 0.8);
+            for (let dy = -sp; dy <= sp; dy++) blend(lhX + dir * d, ly + dy, [255, 243, 170], a0 * fade);
+          }
+        }
+        const gr = 2.5 + 6 * Math.pow(Math.max(0, Math.sin(phi)), 2) + 2 * Math.pow(Math.max(0, -Math.sin(phi)), 2);   // glow swells as the lens turns to face us
+        for (let r = -9; r <= 9; r++) for (let q = -9; q <= 9; q++) { const dd = Math.hypot(r, q); if (dd < gr) blend(lhX + r, ly + q, [255, 243, 170], 0.45 * Math.pow(1 - dd / gr, 1.6)); }
       }
     }
 

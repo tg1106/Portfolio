@@ -72,12 +72,12 @@
         <h2 class="display">Research and<br>projects</h2>
         <p class="lede">Pick a letter, then flip through the postcards.</p>
       </div>
-      <div class="letters" role="group" aria-label="Choose a domain">
-        <button class="letter c-lav" type="button" data-domain="ai" aria-pressed="true"><b>A</b><span>AI &amp; ML</span></button>
-        <button class="letter c-mint" type="button" data-domain="web" aria-pressed="false"><b>W</b><span>Web apps</span></button>
-        <button class="letter c-yel" type="button" data-domain="data" aria-pressed="false"><b>D</b><span>Data</span></button>
-      </div>
       <div class="deck-wrap">
+        <div class="letters" role="group" aria-label="Choose a domain">
+          <button class="letter c-lav" type="button" data-domain="ai" aria-pressed="true"><b>A</b><span>AI &amp; ML</span></button>
+          <button class="letter c-mint" type="button" data-domain="web" aria-pressed="false"><b>W</b><span>Web apps</span></button>
+          <button class="letter c-yel" type="button" data-domain="data" aria-pressed="false"><b>D</b><span>Data</span></button>
+        </div>
         <div class="deck" id="deck" aria-live="polite">
           <article class="postcard c-lav" data-domain="ai" data-kind="project" hidden>
             <figure class="pc-pic"><svg class="art" preserveAspectRatio="xMidYMid slice" viewBox="0 0 252 126" shape-rendering="crispEdges" aria-hidden="true"><rect width="252" height="126" fill="#6b5bd6"/><g stroke="#e2dcfd" stroke-width="1" opacity=".55"><line x1="56" y1="34" x2="108" y2="22"/><line x1="56" y1="34" x2="108" y2="50"/><line x1="56" y1="34" x2="108" y2="78"/><line x1="56" y1="34" x2="108" y2="106"/><line x1="56" y1="67" x2="108" y2="22"/><line x1="56" y1="67" x2="108" y2="50"/><line x1="56" y1="67" x2="108" y2="78"/><line x1="56" y1="67" x2="108" y2="106"/><line x1="56" y1="100" x2="108" y2="22"/><line x1="56" y1="100" x2="108" y2="50"/><line x1="56" y1="100" x2="108" y2="78"/><line x1="56" y1="100" x2="108" y2="106"/><line x1="108" y1="22" x2="160" y2="34"/><line x1="108" y1="22" x2="160" y2="67"/><line x1="108" y1="22" x2="160" y2="100"/><line x1="108" y1="50" x2="160" y2="34"/><line x1="108" y1="50" x2="160" y2="67"/><line x1="108" y1="50" x2="160" y2="100"/><line x1="108" y1="78" x2="160" y2="34"/><line x1="108" y1="78" x2="160" y2="67"/><line x1="108" y1="78" x2="160" y2="100"/><line x1="108" y1="106" x2="160" y2="34"/><line x1="108" y1="106" x2="160" y2="67"/><line x1="108" y1="106" x2="160" y2="100"/><line x1="160" y1="34" x2="212" y2="67"/><line x1="160" y1="67" x2="212" y2="67"/><line x1="160" y1="100" x2="212" y2="67"/></g><g fill="#e0fd72"><rect x="52" y="30" width="8" height="8"/><rect x="52" y="63" width="8" height="8"/><rect x="52" y="96" width="8" height="8"/><rect x="104" y="18" width="8" height="8"/><rect x="104" y="46" width="8" height="8"/><rect x="104" y="74" width="8" height="8"/><rect x="104" y="102" width="8" height="8"/><rect x="156" y="30" width="8" height="8"/><rect x="156" y="63" width="8" height="8"/><rect x="156" y="96" width="8" height="8"/><rect x="208" y="63" width="8" height="8"/></g><rect x="204" y="59" width="16" height="16" fill="#fff" opacity=".0"/></svg></figure>
@@ -87,6 +87,7 @@
               <h3>[AI/ML project name]</h3>
               <p class="pc-text">[One line on the system you built and what you learned about how it really works.]</p>
               <a class="more" href="#">View case study <span aria-hidden="true">↗</span></a>
+              <p class="tech-label">Tech Stack Used:</p>
               <div class="marquee" data-logos="python,pytorch,scikitlearn"></div>
             </div>
           </article>
@@ -98,6 +99,7 @@
               <h3>[Research title]</h3>
               <p class="pc-text">[One line on the question you explored and what you found.]</p>
               <a class="more" href="#">View paper <span aria-hidden="true">↗</span></a>
+              <p class="tech-label">Tech Stack Used:</p>
               <div class="marquee" data-logos="python,jupyter,numpy"></div>
             </div>
           </article>
@@ -115,6 +117,7 @@
               <h3>Tide / personal workspace</h3>
               <p class="pc-text">A calmer place for tasks, notes, and everything in between.</p>
               <a class="more" href="#">View case study <span aria-hidden="true">↗</span></a>
+              <p class="tech-label">Tech Stack Used:</p>
               <div class="marquee" data-logos="react,typescript,supabase"></div>
             </div>
           </article>
@@ -132,6 +135,7 @@
               <h3>Little wins / habit tracker</h3>
               <p class="pc-text">Small rituals. Meaningful progress. One good day at a time.</p>
               <a class="more" href="#">View case study <span aria-hidden="true">↗</span></a>
+              <p class="tech-label">Tech Stack Used:</p>
               <div class="marquee" data-logos="react,nodedotjs,mongodb"></div>
             </div>
           </article>
@@ -149,6 +153,7 @@
               <h3>Orbit / developer dashboard</h3>
               <p class="pc-text">Your repositories, activity, and daily momentum in one view.</p>
               <a class="more" href="#">View case study <span aria-hidden="true">↗</span></a>
+              <p class="tech-label">Tech Stack Used:</p>
               <div class="marquee" data-logos="nextdotjs,tailwindcss,github"></div>
             </div>
           </article>
@@ -160,6 +165,7 @@
               <h3>[Data research title]</h3>
               <p class="pc-text">[One line on the data you studied and the pattern you found.]</p>
               <a class="more" href="#">View paper <span aria-hidden="true">↗</span></a>
+              <p class="tech-label">Tech Stack Used:</p>
               <div class="marquee" data-logos="python,pandas,numpy"></div>
             </div>
           </article>
@@ -200,6 +206,7 @@
               <h3>Cloud practitioner</h3>
               <p class="pc-text">Cloud fundamentals, architecture, and building for scale.</p>
               <a class="more" href="#">View credential <span aria-hidden="true">↗</span></a>
+              <p class="tech-label">Tech Stack Used:</p>
               <div class="marquee" data-logos="amazonwebservices"></div>
             </div>
           </article>
@@ -211,6 +218,7 @@
               <h3>Front-end development</h3>
               <p class="pc-text">Accessible interfaces, responsive systems, and modern web foundations.</p>
               <a class="more" href="#">View credential <span aria-hidden="true">↗</span></a>
+              <p class="tech-label">Tech Stack Used:</p>
               <div class="marquee" data-logos="meta"></div>
             </div>
           </article>
@@ -222,6 +230,7 @@
               <h3>Problem solving</h3>
               <p class="pc-text">Data structures, algorithms, and writing better solutions.</p>
               <a class="more" href="#">View credential <span aria-hidden="true">↗</span></a>
+              <p class="tech-label">Tech Stack Used:</p>
               <div class="marquee" data-logos="hackerrank"></div>
             </div>
           </article>
@@ -245,6 +254,8 @@
           <div class="heat" id="heat" role="img" aria-label="GitHub contribution calendar"></div>
         </div>
         <div class="heat-legend" aria-hidden="true">Less <i class="l0"></i><i class="l1"></i><i class="l2"></i><i class="l3"></i><i class="l4"></i> More</div>
+        <div class="gh-live"><span class="live"><i></i>Live</span><span id="gh-updated">connecting…</span></div>
+        <ul class="gh-feed" id="gh-feed" aria-live="polite"></ul>
       </div>
     </section>
 
@@ -283,7 +294,7 @@
   <footer class="foot">
     <a class="logo" href="#top">yn.<sup>®</sup></a>
     <div class="links"><a href="#about">About</a><a href="#projects">Work</a><a href="#skills">Skills</a><a href="#certificates">Certificates</a><a href="#track">Track me</a><a href="#faq">FAQs</a><a href="#contact">Contact</a></div>
-    <p>© Tharun Gopinath 2026 · a little pixel paradise made by <span class="mk"><i data-logo="claude" data-brand></i>Claude</span>, <span class="mk"><i data-logo="cocacola" data-brand></i>diet coke</span> and <span class="mk"><svg class="heart" viewBox="0 0 9 8" shape-rendering="crispEdges" aria-hidden="true"><path fill="#e0463b" d="M1 0h2v1H1zM6 0h2v1H6zM0 1h4v1H0zM5 1h4v1H5zM0 2h9v2H0zM1 4h7v1H1zM2 5h5v1H2zM3 6h3v1H3zM4 7h1v1H4z"/></svg>love</span>.</p>
+    <p>© Tharun Gopinath 2026 · a little pixel paradise made by <span class="mk"><i data-logo="claude" data-brand></i>Claude</span>, <span class="mk"><img class="mk-logo" src="assets/diet-coke.svg" alt="Diet Coke" width="48" height="18"></span> and <span class="mk"><svg class="heart" viewBox="0 0 9 8" shape-rendering="crispEdges" aria-hidden="true"><path fill="#e0463b" d="M1 0h2v1H1zM6 0h2v1H6zM0 1h4v1H0zM5 1h4v1H5zM0 2h9v2H0zM1 4h7v1H1zM2 5h5v1H2zM3 6h3v1H3zM4 7h1v1H4z"/></svg>love</span>.</p>
   </footer>
 
   <script src="js/logos.js"></script>
@@ -358,12 +369,15 @@
       el.insertAdjacentHTML('beforeend', `<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="${el.hasAttribute('data-brand') ? L.color : 'currentColor'}" d="${L.d}"/></svg>`);
     });
 
-    // GitHub contributions for this username (the calendar loads from a public contributions API; with it empty it shows sample data instead).
+    // GitHub activity, live: the calendar reloads every 5 minutes and the latest public events every minute.
     const GITHUB_USER = 'tg1106';
     (function () {
       const year = new Date().getFullYear(), heat = document.getElementById('heat'), months = document.getElementById('heat-months');
+      const feed = document.getElementById('gh-feed'), upd = document.getElementById('gh-updated');
       document.getElementById('gh-year').textContent = year;
       const lvl = (n) => (n === 0 ? 0 : n < 4 ? 1 : n < 8 ? 2 : n < 12 ? 3 : 4);
+      const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+      const stamp = () => { upd.textContent = 'updated ' + new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', second: '2-digit' }); };
       function sample() {
         const out = []; let s = 11; const rand = () => ((s = (s * 16807) % 2147483647) / 2147483647);
         for (let d = new Date(year, 0, 1); d.getFullYear() === year; d.setDate(d.getDate() + 1)) {
@@ -385,12 +399,33 @@
           return `<span style="grid-column:${Math.floor((pad + i) / 7) + 1}">${new Date(year, +m - 1, 1).toLocaleString('en', { month: 'short' })}</span>`;
         }).join('');
       }
-      const demo = () => { const d = sample(); draw(d, d.reduce((a, x) => a + x.count, 0), 'Sample data. Add your GitHub username in index.html (GITHUB_USER) to show the real thing.'); };
-      if (!GITHUB_USER) return demo();
-      fetch(`https://github-contributions-api.jogruber.de/v4/${encodeURIComponent(GITHUB_USER)}?y=${year}`)
+      const demo = () => { const d = sample(); draw(d, d.reduce((a, x) => a + x.count, 0), 'Sample data, the live GitHub request failed. Is the page online?'); upd.textContent = 'offline'; };
+      const ago = (t) => { const s = Math.max(1, (Date.now() - new Date(t)) / 1000); return s < 90 ? 'just now' : s < 3600 ? Math.round(s / 60) + ' min ago' : s < 86400 ? Math.round(s / 3600) + ' h ago' : Math.round(s / 86400) + ' d ago'; };
+      function line(e) {
+        const repo = esc(e.repo.name.replace(GITHUB_USER + '/', '')), p = e.payload || {};
+        switch (e.type) {
+          case 'PushEvent': { const n = p.size || (p.commits && p.commits.length) || 1; return `Pushed ${n} commit${n > 1 ? 's' : ''} to ${repo}`; }
+          case 'CreateEvent': return `Created ${esc(p.ref_type)} ${esc(p.ref || repo)}`;
+          case 'PullRequestEvent': return `${esc(p.action)} a pull request in ${repo}`;
+          case 'IssuesEvent': return `${esc(p.action)} an issue in ${repo}`;
+          case 'WatchEvent': return `Starred ${repo}`;
+          case 'ForkEvent': return `Forked ${repo}`;
+          case 'IssueCommentEvent': return `Commented in ${repo}`;
+          default: return `${esc(e.type.replace('Event', ''))} in ${repo}`;
+        }
+      }
+      const loadFeed = () => fetch(`https://api.github.com/users/${encodeURIComponent(GITHUB_USER)}/events/public?per_page=8`)
         .then((r) => r.json())
-        .then((j) => draw(j.contributions, (j.total && j.total[year]) || j.contributions.reduce((a, x) => a + x.count, 0), `github.com/${GITHUB_USER}`))
-        .catch(demo);
+        .then((ev) => { feed.innerHTML = ev.slice(0, 6).map((e) => `<li><span>${line(e)}</span><time datetime="${e.created_at}">${ago(e.created_at)}</time></li>`).join('') || '<li><span>No public activity yet</span></li>'; stamp(); })
+        .catch(() => { upd.textContent = 'feed unavailable'; });
+      const loadCalendar = () => fetch(`https://github-contributions-api.jogruber.de/v4/${encodeURIComponent(GITHUB_USER)}?y=${year}`)
+        .then((r) => r.json())
+        .then((j) => { draw(j.contributions, (j.total && j.total[year]) || j.contributions.reduce((a, x) => a + x.count, 0), `github.com/${GITHUB_USER}`); stamp(); })
+        .catch(() => { if (!heat.children.length) demo(); });
+      if (!GITHUB_USER) return demo();
+      loadCalendar(); loadFeed();
+      setInterval(loadFeed, 60000); setInterval(loadCalendar, 300000);
+      document.addEventListener('visibilitychange', () => { if (!document.hidden) { loadFeed(); loadCalendar(); } });
     })();
   </script>
 </body>

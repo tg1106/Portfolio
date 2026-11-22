@@ -36,23 +36,29 @@
   }
   const shade = (hex, k) => '#' + [1, 3, 5].map((i) => Math.round(parseInt(hex.slice(i, i + 2), 16) * k).toString(16).padStart(2, '0')).join('');
 
-  // Grove frame: palms are drawn once per day/night; the hammock is redrawn every tick so it sways in the wind.
-  const GROVE_BASE = {};
+  // Grove frame: both palms sway about their bases (nearest-neighbour rotation) and the hammock is tied to the trunks,
+  // so it moves with them. Its length is fixed, so it sags a little more when the trunks lean together.
+  const GROVE_PALM = {};
   function groveFrame(night, t) {
-    if (!GROVE_BASE[night]) { const b = mk(146, 66, (r) => { drawPalm(r, 0, false); drawPalm(r, 84, true); }); GROVE_BASE[night] = night ? moonlit(b) : b; }
+    if (!GROVE_PALM[night]) { const c = mk(62, 66, (r) => drawPalm(r, 0, false)); GROVE_PALM[night] = night ? moonlit(c) : c; }
+    const out = mk(146, 66, () => {}), g = out.getContext('2d');
+    g.imageSmoothingEnabled = false;
+    const A = 0.05, wind = (p) => A * (Math.sin(t * 0.8 + p) + 0.35 * Math.sin(t * 2.1 + p * 1.6));
+    const thL = wind(0), thR = wind(0.7), PX = 14.5, PY = 65, RX = 84 + 62 - PX;       // pivots: trunk bases
+    const palm = (px, flip, th) => { g.save(); g.translate(px, PY); g.rotate(th); if (flip) g.scale(-1, 1); g.drawImage(GROVE_PALM[night], -PX, -PY); g.restore(); };
+    palm(PX, false, thL); palm(RX, true, thR);
+    const tie = (px, sgn, th) => [px + sgn * 8.8 * Math.cos(th) + 23 * Math.sin(th), PY + sgn * 8.8 * Math.sin(th) - 23 * Math.cos(th)];   // where the hammock meets each trunk
+    const [xl, yl] = tie(PX, 1, thL), [xr, yr] = tie(RX, -1, thR);
+    const d = Math.hypot(xr - xl, yr - yl), len = 103.5, sag = Math.max(8, Math.min(17, Math.sqrt(Math.max(0, (len - d) * 3 * d / 8))));
     const hm = mk(146, 66, (r) => {
-      const x0 = 23, x1 = 119, sag = 17 + Math.sin(t * 1.1) * 2.4, gust = 0.6 + 0.6 * Math.sin(t * 0.37);
-      for (let x = x0; x <= x1; x++) {
-        const u = (x - x0) / (x1 - x0);
-        const y = 42 + Math.round(sag * 4 * u * (1 - u) + Math.sin(t * 2.3 - u * 6) * 1.3 * gust * Math.sin(Math.PI * u));
-        r(x, y, 1, 4, Math.floor((x - x0) / 6) % 2 ? '#fff1da' : '#ec714c'); r(x, y + 4, 1, 1, '#b8523a');
-        if (x % 3 === 0) r(x, y + 5, 1 + Math.round(Math.sin(t * 3 + x) * 0.6 + 0.4), 1, '#f6ca78');
+      for (let x = Math.round(xl); x <= Math.round(xr); x++) {
+        const u = (x - xl) / (xr - xl), y = Math.round(yl + (yr - yl) * u + sag * 4 * u * (1 - u));
+        r(x, y, 1, 4, Math.floor((x - xl) / 6) % 2 ? '#fff1da' : '#ec714c'); r(x, y + 4, 1, 1, '#b8523a');
+        if (x % 3 === 0) r(x, y + 5, 1, 2, '#f6ca78');
       }
-      r(x0 - 1, 40, 3, 4, '#5b4a36'); r(x1 - 1, 40, 3, 4, '#5b4a36');
+      r(Math.round(xl) - 1, Math.round(yl) - 2, 3, 4, '#5b4a36'); r(Math.round(xr) - 1, Math.round(yr) - 2, 3, 4, '#5b4a36');
     });
-    const out = mk(146, 66, () => {});
-    const g = out.getContext('2d');
-    g.drawImage(GROVE_BASE[night], 0, 0); g.drawImage(night ? moonlit(hm) : hm, 0, 0);
+    g.drawImage(night ? moonlit(hm) : hm, 0, 0);
     return out;
   }
 
@@ -179,19 +185,8 @@
       });
     },
     palm() { return mk(62, 66, (r) => drawPalm(r, 0, false)); },
-    // two palms leaning toward each other with a hammock tied between the trunks
-    grove() {
-      return mk(146, 66, (r) => {
-        drawPalm(r, 0, false); drawPalm(r, 84, true);
-        const x0 = 23, x1 = 119;
-        for (let x = x0; x <= x1; x++) {
-          const t = (x - x0) / (x1 - x0), y = 42 + Math.round(17 * 4 * t * (1 - t));
-          r(x, y, 1, 4, Math.floor((x - x0) / 6) % 2 ? '#fff1da' : '#ec714c'); r(x, y + 4, 1, 1, '#b8523a');
-          if (x % 3 === 0) r(x, y + 5, 1, 2, '#f6ca78');
-        }
-        r(x0 - 1, 40, 3, 4, '#5b4a36'); r(x1 - 1, 40, 3, 4, '#5b4a36');
-      });
-    },
+    // two palms leaning toward each other with a hammock tied between the trunks (animated by groveFrame)
+    grove(night) { return groveFrame(!!night, 0); },
     rocks() {
       return mk(40, 25, (r) => {
         const blob = (cx, cy, rx, ry) => {
@@ -340,17 +335,17 @@
     draw(); setInterval(draw, 220);
   });
 
-  /* ---------- marquee ---------- */
+  /* ---------- marquee: logo + name, blue plus between them, scrolling forever ---------- */
   document.querySelectorAll('.marquee[data-logos]').forEach((m) => {
     const names = m.dataset.logos.split(',');
-    const chip = (n) => {
+    const item = (n) => {
       const L = window.LOGOS[n];
-      return `<span class="chip" title="${L.title}"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="${L.color}" d="${L.d}"/></svg></span>`;
+      return `<span class="tk"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="${L.color}" d="${L.d}"/></svg>${L.title}</span><span class="plus">+</span>`;
     };
-    const reps = Math.max(2, Math.ceil(560 / (names.length * 60)));
-    const half = Array.from({ length: reps }, () => names.map(chip).join('')).join('');
+    const reps = Math.max(2, Math.ceil(900 / (names.length * 230)));
+    const half = Array.from({ length: reps }, () => names.map(item).join('')).join('');
     m.setAttribute('role', 'img');
-    m.setAttribute('aria-label', 'Built with ' + names.map((n) => window.LOGOS[n].title).join(', '));
+    m.setAttribute('aria-label', 'Tech stack used: ' + names.map((n) => window.LOGOS[n].title).join(', '));
     m.innerHTML = `<div class="track" aria-hidden="true"><div class="half">${half}</div><div class="half">${half}</div></div>`;
   });
 })();

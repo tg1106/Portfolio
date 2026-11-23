@@ -279,7 +279,7 @@
 
   /* ---------- section dividers: an uneven line drawn in the sand (a groove with a pale lip on its lower side) ---------- */
   const lines = [];
-  document.querySelectorAll('main > section:not(.hero):not(.cta)').forEach((sec, n) => {
+  document.querySelectorAll('main > section:not(.hero):not(.cta):not(#about)').forEach((sec, n) => {
     const box = Object.assign(document.createElement('div'), { className: 'sand-line' }), cv = document.createElement('canvas');
     box.setAttribute('aria-hidden', 'true'); box.append(cv);
     sec.before(box);

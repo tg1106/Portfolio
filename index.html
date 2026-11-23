@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
+  <script>if ("scrollRestoration" in history) history.scrollRestoration = "manual";</script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Tharun Gopinath — builder, made of curiosity and a little sea</title>
@@ -8,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Mona+Sans:wdth,wght@75..125,400..900&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20261130">
+  <link rel="stylesheet" href="styles.css?v=20261135">
 </head>
 <body>
   <!-- one page-tall pixel canvas: sea across the top, wrapping down both sides of the page -->
@@ -37,11 +38,14 @@
 
     <section id="about" class="block about">
       <figure class="about-photo">
+        <p class="pill">About</p>
         <img src="assets/me.png" alt="Portrait of Tharun Gopinath" width="200" height="200">
-        <a class="btn btn-lg resume" href="assets/resume.pdf" download="Tharun-Gopinath-Resume.pdf">Resume ↓</a>
+        <a class="resume" href="assets/resume.pdf" download="Tharun-Gopinath-Resume.pdf" title="Download my resume (PDF)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/><path d="M12 11v6M9.5 14.5 12 17l2.5-2.5"/></svg>
+          <span>Resume</span>
+        </a>
       </figure>
       <div class="about-copy">
-        <p class="pill">About</p>
         <p class="about-name">Tharun Gopinath</p>
         <h2 class="display">I build things PEOPLE REMEMBER</h2>
         <nav class="socials" aria-label="Find me online">
@@ -343,11 +347,11 @@
     <p>© Tharun Gopinath 2026 · a little pixel paradise made by <span class="mk"><i data-logo="claude" data-brand></i>Claude</span>, <span class="mk"><img class="mk-logo" src="assets/diet-coke.svg" alt="Diet Coke" width="48" height="18"> diet coke</span> and <span class="mk"><svg class="heart" viewBox="0 0 9 8" shape-rendering="crispEdges" aria-hidden="true"><path fill="#e0463b" d="M1 0h2v1H1zM6 0h2v1H6zM0 1h4v1H0zM5 1h4v1H5zM0 2h9v2H0zM1 4h7v1H1zM2 5h5v1H2zM3 6h3v1H3zM4 7h1v1H4z"/></svg>love</span>.</p>
   </footer>
 
-  <script src="js/logos.js?v=20261130"></script>
-  <script src="js/theme.js?v=20261130"></script>
-  <script src="js/sea.js?v=20261130"></script>
-  <script src="js/props.js?v=20261130"></script>
-  <script src="js/harbor.js?v=20261130"></script>
+  <script src="js/logos.js?v=20261135"></script>
+  <script src="js/theme.js?v=20261135"></script>
+  <script src="js/sea.js?v=20261135"></script>
+  <script src="js/props.js?v=20261135"></script>
+  <script src="js/harbor.js?v=20261135"></script>
   <script>
     // logo-only chips for stickers and skill rows
     document.querySelectorAll('[data-chips]').forEach((el) => {
@@ -617,24 +621,33 @@
     })();
 
     // Intro: the first screen is sea (8/10) and shore (2/10). Two seconds after load the page glides down to About, so the sea slides up and away.
-    // Skipped when the visitor already scrolled, followed a #link, reloaded part-way down, or asked for less motion.
+    // Every load starts at the top (no restored scroll position). Skipped for a #link or reduced motion. Cancelled by real intent only:
+    // a touch, a click, a scrolling key, or a wheel/trackpad scroll of more than 2px (tiny trackpad jitter does not count).
     (function () {
-      const about = document.getElementById('about');
+      const about = document.getElementById('about'), root = document.documentElement;
       if (!about || location.hash || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
       let stopped = false;
       const stop = () => { stopped = true; };
-      ['wheel', 'touchstart', 'keydown', 'mousedown'].forEach((e) => addEventListener(e, stop, { once: true, passive: true }));
-      addEventListener('load', () => setTimeout(() => {
-        if (stopped || scrollY > 8) return;
-        const nav = document.querySelector('.nav-wrap'), from = scrollY, ms = 1700, t0 = performance.now();
-        const to = about.getBoundingClientRect().top + from - (nav ? nav.offsetHeight : 0);
-        (function step(now) {
-          if (stopped) return;
-          const k = Math.min(1, (now - t0) / ms), e = k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;
-          scrollTo({ top: from + (to - from) * e, behavior: 'instant' });
-          if (k < 1) requestAnimationFrame(step);
-        })(t0);
-      }, 2000));
+      addEventListener('touchstart', stop, { passive: true });
+      addEventListener('mousedown', stop);
+      addEventListener('wheel', (e) => { if (Math.abs(e.deltaY) > 2) stop(); }, { passive: true });
+      addEventListener('keydown', (e) => { if ([' ', 'ArrowDown', 'ArrowUp', 'PageDown', 'PageUp', 'End', 'Home'].includes(e.key)) stop(); });
+      const target = () => about.getBoundingClientRect().top + scrollY - (document.querySelector('.nav-wrap') || { offsetHeight: 0 }).offsetHeight;
+      const start = () => {
+        root.classList.add('jumping');                       // instant scrolling while we drive it (the page css is smooth)
+        scrollTo(0, 0);
+        setTimeout(() => {
+          if (stopped) return root.classList.remove('jumping');
+          const ms = 1700, t0 = performance.now();
+          (function step(now) {
+            if (stopped) return root.classList.remove('jumping');
+            const k = Math.min(1, (now - t0) / ms), e = k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;
+            scrollTo(0, target() * e);                       // the target is re-read each frame, so late layout shifts cannot leave it short
+            if (k < 1) requestAnimationFrame(step); else root.classList.remove('jumping');
+          })(t0);
+        }, 2000);
+      };
+      if (document.readyState === 'complete') start(); else addEventListener('load', start);
     })();
   </script>
 </body>

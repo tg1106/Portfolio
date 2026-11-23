@@ -124,9 +124,9 @@
     const D = (x, y) => { d(x, y); d(x + 0.6, y + 0.6); };                                              // roughly a 2px stroke, a little uneven like a finger in sand
     const T = 2 * Math.PI + 0.3;
     for (let t = 0; t < T; t += 0.012) { const a = -2.1 + t, r = 13.2 - 4.2 * (t / T); D(14 + r * Math.cos(a), 14 + r * Math.sin(a)); }   // one stroke, spiralling in at the end
-    for (let i = 0; i <= 1; i += 0.04) { const x = 7.4 + i * 4.6, y = 14.4 - 0.6 * i; D(x, y); D(x, y + 1); }       // left eye: flat, rising a touch
-    for (let i = 0; i <= 1; i += 0.03) { const x = 15 + i * 5.6, y = 12.2 + 2.1 * i; D(x, y); D(x, y + 1); }       // right eye: higher, sloping down to the right
-    for (let u = 0; u <= 1; u += 0.02) { const x = 8.8 + u * 9.4, y = 19.2 + 1.7 * Math.sin(Math.PI * u); D(x, y); if (u < 0.6) D(x, y + 1); if (u < 0.25) D(x, y + 2); }   // bowl mouth, heavier on the left
+    for (let i = 0; i <= 1; i += 0.04) { const x = 7.4 + i * 4.8, y = 14.6 - 0.6 * i - 0.9 * Math.sin(Math.PI * i); D(x, y); D(x, y + 1); }   // left eye: arching upward
+    for (let i = 0; i <= 1; i += 0.03) { const x = 15 + i * 5.8, y = 13.6 - 1.4 * i - 0.9 * Math.sin(Math.PI * i); D(x, y); D(x, y + 1); }   // right eye: a little higher, tilting up to the right
+    for (let u = 0; u <= 1; u += 0.02) { const x = 8.8 + u * 9.4, y = 19.2 + 1.7 * Math.sin(Math.PI * u); D(x, y); D(x, y + 1); }              // plain bowl mouth, even thickness, nothing hanging off it
   });
 
   const KINDS = {

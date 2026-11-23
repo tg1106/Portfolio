@@ -15,7 +15,7 @@ if (file) {
 }
 const out = {};
 for (const k of Object.keys(vars)) {
-  if (/SECRET|TOKEN|PASSWORD|API_?KEY|SPOTIFY/i.test(k)) { console.warn(`skipped ${k}: looks like a secret, config.js is public`); continue; }
+  if (/SECRET|TOKEN|PASSWORD|API_?KEY|SPOTIFY|LASTFM/i.test(k)) { if (!/^(SPOTIFY|LASTFM)_/.test(k)) console.warn(`skipped ${k}: looks like a secret, config.js is public`); continue; }   // LASTFM_* live here for local use only and are never copied
   out[k] = process.env[k] !== undefined ? process.env[k] : vars[k];
 }
 fs.writeFileSync(path.join(root, 'js', 'config.js'),

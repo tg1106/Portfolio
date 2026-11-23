@@ -19,6 +19,7 @@ window.LINKS = {
   "PROJECT_5_LIVE": "",
   "PROJECT_6_GITHUB": "https://github.com/tg1106",
   "PROJECT_6_LIVE": "",
+  "NOW_PLAYING_URL": "",
   "CERT_1_URL": "",
   "CERT_2_URL": "",
   "CERT_3_URL": ""

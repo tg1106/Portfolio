@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Mona+Sans:wdth,wght@75..125,400..900&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20261143">
+  <link rel="stylesheet" href="styles.css?v=20261144">
 </head>
 <body>
   <!-- one page-tall pixel canvas: sea across the top, wrapping down both sides of the page -->
@@ -347,12 +347,12 @@
     <p>© Tharun Gopinath 2026 · a little pixel paradise made by <span class="mk"><i data-logo="claude" data-brand></i>Claude</span>, <span class="mk"><img class="mk-logo" src="assets/diet-coke.svg" alt="Diet Coke" width="48" height="18"> diet coke</span> and <span class="mk"><svg class="heart" viewBox="0 0 9 8" shape-rendering="crispEdges" aria-hidden="true"><path fill="#e0463b" d="M1 0h2v1H1zM6 0h2v1H6zM0 1h4v1H0zM5 1h4v1H5zM0 2h9v2H0zM1 4h7v1H1zM2 5h5v1H2zM3 6h3v1H3zM4 7h1v1H4z"/></svg>love</span>.</p>
   </footer>
 
-  <script src="js/config.js?v=20261143"></script>
-  <script src="js/logos.js?v=20261143"></script>
-  <script src="js/theme.js?v=20261143"></script>
-  <script src="js/sea.js?v=20261143"></script>
-  <script src="js/props.js?v=20261143"></script>
-  <script src="js/harbor.js?v=20261143"></script>
+  <script src="js/config.js?v=20261144"></script>
+  <script src="js/logos.js?v=20261144"></script>
+  <script src="js/theme.js?v=20261144"></script>
+  <script src="js/sea.js?v=20261144"></script>
+  <script src="js/props.js?v=20261144"></script>
+  <script src="js/harbor.js?v=20261144"></script>
   <script>
     // logo-only chips for stickers and skill rows
     document.querySelectorAll('[data-chips]').forEach((el) => {
@@ -505,19 +505,26 @@
       document.addEventListener('visibilitychange', () => { if (!document.hidden) load(); });
     })();
 
-    // Spotify walkman. NOW_PLAYING_URL is a small serverless function (api/now-playing.js) that holds the Spotify credentials;
-    // until it is deployed the walkman plays a sample track.
-    const NOW_PLAYING_URL = '/api/now-playing';
+    // Walkman. NOW_PLAYING_URL is a small serverless function (api/now-playing.js) that reads Last.fm (which Spotify scrobbles to) with a key that
+    // must stay off the page; until it is deployed the walkman plays a sample track.
+    const NOW_PLAYING_URL = (window.LINKS && window.LINKS.NOW_PLAYING_URL) || '/api/now-playing';
     const spotify = (function () {
       const wm = $('walkman'), title = $('sp-title'), artist = $('sp-artist'), left = $('sp-left'), bar = $('sp-bar'), cover = $('sp-cover'), listen = $('sp-listen'), note = $('sp-note');
-      const DEMO = { isPlaying: true, title: 'Sample song', artist: 'Spotify is not connected yet', durationMs: 214000, id: null, url: 'https://open.spotify.com' };
-      let track = null, polledAt = 0, demo = true;
+      const DEMO = { isPlaying: true, title: 'Sample song', artist: 'Last.fm is not connected yet', durationMs: 214000, progressMs: 0 };
+      let track = null, polledAt = 0, demo = true, seen = { key: '', at: 0 };
       const fmt = (ms) => { const s = Math.max(0, Math.round(ms / 1000)); return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`; };
-      const progress = () => (demo ? Date.now() % track.durationMs : Math.min(track.durationMs, track.progressMs + (track.isPlaying ? Date.now() - polledAt : 0)));
+      // Last.fm gives no playback position: progressMs is an estimate, or null, in which case count up from when this song first showed here
+      const progress = () => {
+        if (demo) return Date.now() % track.durationMs;
+        const run = track.isPlaying ? Date.now() - (track.progressMs == null ? seen.at : polledAt) : 0;
+        return Math.min(track.durationMs || 0, (track.progressMs || 0) + run);
+      };
+      const spotifyQuery = () => encodeURIComponent(`${track.artist} ${track.title}`);
       function paint() {
         if (!track || panels.spotify.hidden) return;
         const p = progress();
-        left.textContent = '-' + fmt(track.durationMs - p); bar.style.width = (p / track.durationMs * 100).toFixed(1) + '%';
+        left.textContent = track.durationMs ? '-' + fmt(track.durationMs - p) : '--:--';
+        bar.style.width = track.durationMs ? (p / track.durationMs * 100).toFixed(1) + '%' : '0%';
         wm.dataset.state = track.isPlaying ? 'playing' : 'paused';
       }
       // album cover, shrunk to 32x32 so it reads as pixel art; without Spotify a little vinyl record is drawn instead
@@ -544,8 +551,8 @@
         setCover(demo ? null : track.cover);
         title.textContent = track.title; artist.textContent = track.artist;
         title.classList.toggle('scroll', title.scrollWidth > title.parentElement.clientWidth);
-        listen.href = track.url || 'https://open.spotify.com';
-        note.textContent = demo ? 'Sample track. My Spotify is not connected yet (see api/now-playing.js).' : track.isPlaying ? 'Playing right now.' : 'Not playing at the moment. This is the last song I played.';
+        listen.href = demo ? 'https://open.spotify.com' : `https://open.spotify.com/search/${spotifyQuery()}`;
+        note.textContent = demo ? 'Sample track. Last.fm is not connected yet (see api/now-playing.js).' : track.isPlaying ? 'Playing right now.' : 'Not playing at the moment. This is the last song I played.';
         paint();
       }
       async function poll() {
@@ -555,15 +562,17 @@
           const j = await r.json();
           if (!j.title) throw new Error('empty');
           track = j; demo = false; polledAt = Date.now();
+          const key = j.title + '|' + j.artist;
+          if (seen.key !== key) seen = { key, at: Date.now() };
         } catch (e) { track = DEMO; demo = true; }
         show();
       }
-      // Listen with me: ask the Spotify app to play this exact song; if the app does not take over, open it on the web.
+      // Vibe w/ me: Last.fm has no Spotify id, so open Spotify's search for this song (the app if it takes over, else the web player).
       listen.addEventListener('click', (e) => {
-        if (!track || !track.id) return;
+        if (!track || demo) return;
         e.preventDefault();
-        location.href = `spotify:track:${track.id}:play`;
-        setTimeout(() => { if (document.hasFocus() && !document.hidden) window.open(track.url, '_blank', 'noopener'); }, 900);
+        location.href = `spotify:search:${spotifyQuery()}`;
+        setTimeout(() => { if (document.hasFocus() && !document.hidden) window.open(`https://open.spotify.com/search/${spotifyQuery()}`, '_blank', 'noopener'); }, 900);
       });
       setInterval(paint, 500);
       setInterval(() => { if (!panels.spotify.hidden && !document.hidden) poll(); }, 15000);

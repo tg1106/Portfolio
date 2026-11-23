@@ -96,32 +96,54 @@
   });
 
   /* ---------- water in front of the hull ----------
-     A translucent, wavy water layer overlaps the bottom of the hull: dithered like the sea, a foam crest on the surface,
-     wash trailing off both ends and a faint wobbling reflection of the hull. The boat bobs behind it. */
-  const WW = 116, WH = 22, SURF = 4, HULL_X0 = 21, HULL_X1 = 84;
-  const wc = document.querySelector('.boat-water');
+     The sea is repainted over the lower hull so the boat sits IN the water. Each pixel copies the harbor pixel right behind it
+     (same x, same y, read from the harbor canvas), so the layer is invisible except for what it adds: a wavy surface with foam crests,
+     a dithered see-through band at the waterline, short wash off the bow and stern, and crisp pixel ripples that travel along the hull
+     and spread under the keel. No blur, no tint. The boat bobs behind the layer (the layer does not move), so the waterline slides on the hull. */
+  const WW = 116, WH = 24, SURF = 5, KEEL = SURF + 13, HULL_X0 = 20, HULL_X1 = 91, SPAN = 12;
+  const BAYER16 = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5].map((v) => (v + 0.5) / 16);
+  const wc = document.querySelector('.boat-water'), boatEl = document.querySelector('.boat');
   let wimg, wbuf;
   if (wc) { wc.width = WW; wc.height = WH; wimg = wc.getContext('2d').createImageData(WW, WH); wbuf = new Uint32Array(wimg.data.buffer); }
   function drawBoatWater(p, time) {
-    if (!wc) return;
+    if (!wc || !boatEl) return;
     wbuf.fill(0);
-    const sh = [p.sea3, p.sea2, p.sea1].map((c) => c.map(Math.round)), foam = p.foam.map(Math.round), hull = [74, 43, 18];
+    const foam = p.foam.map(Math.round);
+    const hb = cv.parentElement.getBoundingClientRect(), bb = boatEl.getBoundingClientRect();
+    const left = bb.left - hb.left - 30, top = boatEl.offsetTop + 135;      // overlay origin in harbor css px (3px per overlay pixel)
+    const behind = (x, y) => {                                              // the harbor pixel behind overlay pixel (x, y)
+      const hx = Math.max(0, Math.min(W - 1, Math.floor((left + x * 3 + 1) / PX))), hy = Math.max(0, Math.min(ROWS - 1, Math.floor((top + y * 3 + 1) / PX)));
+      const c = buf[hy * W + hx];
+      return [c & 255, (c >> 8) & 255, (c >> 16) & 255];
+    };
+    const ripple = (x, y, base, step, dash) => {                            // a travelling dash pattern: crisp, one pixel tall
+      if (((x + step) % dash) < dash * 0.45) wbuf[y * WW + x] = pack(mix(behind(x, y), foam, base));
+    };
     for (let x = 0; x < WW; x++) {
-      const surf = SURF + Math.sin(x * 0.33 + time * 2.4) * 0.9 + Math.sin(x * 0.12 - time * 1.5) * 0.8, yi = Math.round(surf);
-      for (let y = yi; y < WH; y++) {
-        const d = (y - yi) / (WH - yi), lv = d * 2.3, i0 = Math.floor(lv), fr = lv - i0;
-        let col = sh[Math.min(2, i0 + (fr > BAYER[((y & 1) << 1) | (x & 1)] ? 1 : 0))];
-        const under = x > HULL_X0 && x < HULL_X1 && y - yi < 7;
-        if (under) col = mix(col, hull, 0.3 * (1 - (y - yi) / 7) * (0.7 + 0.3 * Math.sin(x * 0.6 + time * 3 + y)));   // reflection of the hull
-        const crest = Math.sin(x * 0.5 + time * 3) > -0.35;
-        if (y === yi && crest) col = foam;
-        else if (y === yi + 1 && ((x + yi) & 1)) col = mix(col, foam, 0.7);
-        wbuf[y * WW + x] = pack(col, y - yi < 2 ? 238 : 250);
+      const inHull = x >= HULL_X0 && x <= HULL_X1, near = x >= HULL_X0 - SPAN && x <= HULL_X1 + SPAN;
+      if (!near) continue;
+      const surf = SURF + Math.sin(x * 0.33 + time * 2.4) * 0.8 + Math.sin(x * 0.13 - time * 1.5) * 0.7, yi = Math.round(surf);
+      const crest = Math.sin(x * 0.5 + time * 3) > -0.3;
+      if (inHull) {
+        for (let y = yi; y <= KEEL; y++) {
+          const d = y - yi;
+          if (d < 2 && 0.72 <= BAYER16[((y & 3) << 2) | (x & 3)]) continue;   // see-through band right at the waterline
+          let col = behind(x, y);
+          if (d === 0 && crest) col = foam;
+          else if (d === 1 && ((x + yi) & 1)) col = mix(col, foam, 0.55);
+          wbuf[y * WW + x] = pack(col);
+        }
+        // ripples sliding along the hull, and wider ones spreading under the keel (they drift the other way)
+        const k = Math.floor(time * 5);
+        if (yi + 5 <= KEEL) ripple(x, yi + 5 + (Math.sin(x * 0.4 + time * 2) > 0.3 ? 1 : 0), 0.5, k, 10);
+        ripple(x, KEEL + 2 + (Math.sin(x * 0.3 - time * 1.6) > 0 ? 1 : 0), 0.45, -k + 3, 12);
+        if (x > HULL_X0 + 8 && x < HULL_X1 - 8) ripple(x, KEEL + 6, 0.35, k + 5, 14);
       }
-      // wash trailing off the bow and stern, and a lapping crest where the water meets the hull
-      const nearEnd = (x > HULL_X0 - 9 && x <= HULL_X0 + 1) || (x >= HULL_X1 - 1 && x < HULL_X1 + 9);
-      if (nearEnd && hash(x, Math.floor(time * 3), 5) > 0.35) wbuf[(yi - 1) * WW + x] = pack(foam, 230);
-      if (x > HULL_X0 && x < HULL_X1 && hash(x >> 1, Math.floor(time * 4), 9) > 0.8) wbuf[Math.max(0, yi - 1) * WW + x] = pack(foam, 200);
+      // wash off the bow and stern: short foam dashes that thin out with distance
+      const lap = hash(x, Math.floor(time * 3), 5), out = inHull ? 0 : (x < HULL_X0 ? HULL_X0 - x : x - HULL_X1) / SPAN;
+      if (!inHull && lap > 0.3 + out * 0.6) wbuf[Math.max(0, yi - 1) * WW + x] = pack(foam, 235);
+      if (!inHull && lap > 0.5 + out * 0.4) ripple(x, yi + 2, 0.5, Math.floor(time * 4), 6);
+      if (inHull && (x < HULL_X0 + 5 || x > HULL_X1 - 5) && lap > 0.3) wbuf[Math.max(0, yi - 1) * WW + x] = pack(foam, 235);
     }
     wc.getContext('2d').putImageData(wimg, 0, 0);
   }
@@ -203,9 +225,9 @@
     return c;
   }
   /* Zoro only strolls now and then: every ROLL_MS the harbor rolls a WALK_CHANCE (10 in 100) while it is on screen.
-     Rarely (SLEEP_CHANCE of the walks) he stops mid-stride, falls asleep standing up for 3 seconds with a snot bubble
+     Every NAP_EVERY-th walk (counted across visits) he stops mid-stride, falls asleep standing up for 3 seconds with a snot bubble
      growing from his nose, the bubble pops and he walks on. */
-  const WALK_CHANCE = 0.1, SLEEP_CHANCE = 0.15, ROLL_MS = 2000, SPEED = 60, ZW = 38, ZH = 34, SNORE = 3;
+  const NAP_EVERY = 10, WALK_CHANCE = 0.1, ROLL_MS = 2000, SPEED = 60, ZW = 38, ZH = 34, SNORE = 3;
   const zoroCv = document.querySelector('.zoro');
   if (zoroCv) {
     zoroCv.width = ZW; zoroCv.height = ZH;
@@ -229,7 +251,13 @@
     if (!reduce) {
       let z = null, near = false;
       new IntersectionObserver((es) => { near = es[0].isIntersecting; }).observe(zoroCv.parentElement);
-      const start = () => { z = { x: -ZW * 3, step: 0, nap: Math.random() < SLEEP_CHANCE ? null : false, napAt: 0.3 + Math.random() * 0.35, sleep: -1 }; zoroCv.style.display = 'block'; };
+      let walks = 0;
+      try { walks = +localStorage.getItem('zoroWalks') || 0; } catch (e) { /* storage blocked: count restarts each visit */ }
+      const start = () => {
+        walks++;
+        try { localStorage.setItem('zoroWalks', walks); } catch (e) { /* ignore */ }
+        z = { x: -ZW * 3, step: 0, nap: walks % NAP_EVERY === 0 ? null : false, napAt: 0.3 + Math.random() * 0.35, sleep: -1 }; zoroCv.style.display = 'block';
+      };
       setInterval(() => { if (!z && near && !document.hidden && Math.random() < WALK_CHANCE) start(); }, ROLL_MS);
       setInterval(() => {
         if (!z) return;

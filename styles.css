@@ -283,7 +283,7 @@ details p { margin-top: 14px; max-width: 60ch; color: var(--cmuted); }
 .boat { position: absolute; right: 7%; bottom: 10px; width: 288px; height: 174px; animation: drift 18s ease-in-out infinite alternate; }
 .boat > *, .boat-in > * { position: absolute; left: 0; top: 0; image-rendering: pixelated; }
 .boat-in { inset: 0; animation: bob 3.6s ease-in-out infinite; }
-.boat-water { left: -30px; top: 147px; width: 348px; height: 66px; z-index: 4; }
+.boat-water { left: -30px; top: 135px; width: 348px; height: 72px; z-index: 4; }
 .boat .boat-back, .boat .boat-front { width: 288px; height: 174px; }
 .boat .boat-me { left: 60px; top: 6px; width: 108px; height: 126px; z-index: 1; }
 .boat-front { z-index: 2; }
@@ -306,11 +306,13 @@ html[data-night="1"] .boat canvas, html[data-night="1"] .zoro { filter: brightne
 .prop .shadow { position: absolute; left: 0; bottom: -5px; width: var(--w, 60px); height: 14px; border-radius: 50%;
   background: radial-gradient(ellipse at center, rgba(10,10,20,var(--shadow-a)) 0 52%, transparent 72%);
   transform: translateX(var(--shadow-dx)) scaleX(calc(.65 + var(--shadow-len) * .7)); }
-.prop-towel .shadow, .prop-starfish .shadow, .prop-shell .shadow, .prop-map .shadow, .prop-heart .shadow, .prop-smiley .shadow, .prop-spiral .shadow { display: none; }
+.prop-oyster .shadow, .prop-conch .shadow, .prop-towel .shadow, .prop-starfish .shadow, .prop-shell .shadow, .prop-map .shadow, .prop-heart .shadow, .prop-smiley .shadow, .prop-spiral .shadow { display: none; }
 /* chest and map poke out of a stepped sand mound that always matches the page sand */
 .prop .mound { position: absolute; left: -12%; right: -12%; bottom: -6px; height: 55%; z-index: 2; background: var(--grain) 0 0 / 216px 216px, var(--sand);
   clip-path: polygon(0 100%, 0 76%, 10% 76%, 10% 54%, 24% 54%, 24% 32%, 40% 32%, 40% 14%, 60% 14%, 60% 32%, 76% 32%, 76% 54%, 90% 54%, 90% 76%, 100% 76%, 100% 100%); }
 .prop-palm canvas { transform-origin: 22% 100%; animation: palm 6s ease-in-out infinite; }
+@keyframes crabwalk { 0%, 8% { translate: 0 0; } 42%, 58% { translate: 64px 0; } 92%, 100% { translate: 0 0; } }
+.prop-crab { animation: crabwalk 18s steps(60) infinite; }
 @keyframes palm { 0%, 100% { transform: rotate(-1.2deg); } 50% { transform: rotate(1.6deg); } }
 
 /* ---------- responsive ---------- */
@@ -348,7 +350,7 @@ html[data-night="1"] .boat canvas, html[data-night="1"] .zoro { filter: brightne
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .zoro { display: block; left: 14%; }
-  .track, .boat, .boat-in, .prop-palm canvas, .postcard.wash, .reel, .wm-tape, .wm-title .scroll { animation: none; }
+  .track, .boat, .boat-in, .prop-crab, .prop-palm canvas, .postcard.wash, .reel, .wm-tape, .wm-title .scroll { animation: none; }
   .book, .cover { transition: none; }
   .postcard { transition: none; }
   .marquee { overflow-x: auto; }

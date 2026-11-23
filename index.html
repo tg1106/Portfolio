@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Mona+Sans:wdth,wght@75..125,400..900&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20261135">
+  <link rel="stylesheet" href="styles.css?v=20261140">
 </head>
 <body>
   <!-- one page-tall pixel canvas: sea across the top, wrapping down both sides of the page -->
@@ -40,7 +40,7 @@
       <figure class="about-photo">
         <p class="pill">About</p>
         <img src="assets/me.png" alt="Portrait of Tharun Gopinath" width="200" height="200">
-        <a class="resume" href="assets/resume.pdf" download="Tharun-Gopinath-Resume.pdf" title="Download my resume (PDF)">
+        <a class="resume" data-link="RESUME_URL" href="assets/resume.pdf" download="Tharun-Gopinath-Resume.pdf" title="Download my resume (PDF)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/><path d="M12 11v6M9.5 14.5 12 17l2.5-2.5"/></svg>
           <span>Resume</span>
         </a>
@@ -49,10 +49,10 @@
         <p class="about-name">Tharun Gopinath</p>
         <h2 class="display">I build things PEOPLE REMEMBER</h2>
         <nav class="socials" aria-label="Find me online">
-          <a href="https://github.com/tg1106" target="_blank" rel="noopener" aria-label="GitHub" title="GitHub" data-logo="github"></a>
-          <a href="#" aria-label="LinkedIn" title="LinkedIn (add your link)" data-logo="linkedin"></a>
-          <a href="#" aria-label="LeetCode" title="LeetCode (add your link)" data-logo="leetcode"></a>
-          <a href="#" aria-label="Website" title="Website (add your link)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3.5 3.5 3.5 14.5 0 18M12 3c-3.5 3.5-3.5 14.5 0 18"/></svg></a>
+          <a href="https://github.com/tg1106" target="_blank" rel="noopener" aria-label="GitHub" title="GitHub" data-logo="github" data-link="GITHUB_URL"></a>
+          <a href="#" aria-label="LinkedIn" title="LinkedIn (set LINKEDIN_URL in .env)" data-logo="linkedin" data-link="LINKEDIN_URL"></a>
+          <a href="#" aria-label="LeetCode" title="LeetCode (set LEETCODE_URL in .env)" data-logo="leetcode" data-link="LEETCODE_URL"></a>
+          <a href="#" aria-label="Website" title="Website (set WEBSITE_URL in .env)" data-link="WEBSITE_URL"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3.5 3.5 3.5 14.5 0 18M12 3c-3.5 3.5-3.5 14.5 0 18"/></svg></a>
         </nav>
         <p class="lede">I design and build clean websites, apps and back-ends that help ideas look sharper, feel trusted and work with purpose.</p>
       </div>
@@ -78,7 +78,7 @@
               <p class="pc-post">Project · AI / ML · 2026</p>
               <h3>[AI/ML project name]</h3>
               <p class="pc-text">[One line on the system you built and what you learned about how it really works.]</p>
-              <div class="pc-links"><a class="more" href="https://github.com/tg1106" target="_blank" rel="noopener">GitHub <span aria-hidden="true">↗</span></a><a class="more" href="#" target="_blank" rel="noopener">Live link <span aria-hidden="true">↗</span></a></div>
+              <div class="pc-links"><a class="more" data-link="PROJECT_1_GITHUB" href="https://github.com/tg1106" target="_blank" rel="noopener">GitHub <span aria-hidden="true">↗</span></a><a class="more" data-link="PROJECT_1_LIVE" href="#" target="_blank" rel="noopener">Live link <span aria-hidden="true">↗</span></a></div>
               <p class="tech-label">Tech Stack Used:</p>
               <div class="marquee" data-logos="python,pytorch,scikitlearn"></div>
             </div>
@@ -90,7 +90,7 @@
               <p class="pc-post">Research · AI / ML · 2026</p>
               <h3>[Research title]</h3>
               <p class="pc-text">[One line on the question you explored and what you found.]</p>
-              <div class="pc-links"><a class="more" href="https://github.com/tg1106" target="_blank" rel="noopener">GitHub <span aria-hidden="true">↗</span></a><a class="more" href="#" target="_blank" rel="noopener">Paper <span aria-hidden="true">↗</span></a></div>
+              <div class="pc-links"><a class="more" data-link="PROJECT_2_GITHUB" href="https://github.com/tg1106" target="_blank" rel="noopener">GitHub <span aria-hidden="true">↗</span></a><a class="more" data-link="PROJECT_2_LIVE" href="#" target="_blank" rel="noopener">Paper <span aria-hidden="true">↗</span></a></div>
               <p class="tech-label">Tech Stack Used:</p>
               <div class="marquee" data-logos="python,jupyter,numpy"></div>
             </div>
@@ -108,7 +108,7 @@
               <p class="pc-post">Project · Web app · 2026</p>
               <h3>Tide / personal workspace</h3>
               <p class="pc-text">A calmer place for tasks, notes, and everything in between.</p>
-              <div class="pc-links"><a class="more" href="https://github.com/tg1106" target="_blank" rel="noopener">GitHub <span aria-hidden="true">↗</span></a><a class="more" href="#" target="_blank" rel="noopener">Live link <span aria-hidden="true">↗</span></a></div>
+              <div class="pc-links"><a class="more" data-link="PROJECT_3_GITHUB" href="https://github.com/tg1106" target="_blank" rel="noopener">GitHub <span aria-hidden="true">↗</span></a><a class="more" data-link="PROJECT_3_LIVE" href="#" target="_blank" rel="noopener">Live link <span aria-hidden="true">↗</span></a></div>
               <p class="tech-label">Tech Stack Used:</p>
               <div class="marquee" data-logos="react,typescript,supabase"></div>
             </div>
@@ -126,7 +126,7 @@
               <p class="pc-post">Project · Full-stack · 2026</p>
               <h3>Little wins / habit tracker</h3>
               <p class="pc-text">Small rituals. Meaningful progress. One good day at a time.</p>
-              <div class="pc-links"><a class="more" href="https://github.com/tg1106" target="_blank" rel="noopener">GitHub <span aria-hidden="true">↗</span></a><a class="more" href="#" target="_blank" rel="noopener">Live link <span aria-hidden="true">↗</span></a></div>
+              <div class="pc-links"><a class="more" data-link="PROJECT_4_GITHUB" href="https://github.com/tg1106" target="_blank" rel="noopener">GitHub <span aria-hidden="true">↗</span></a><a class="more" data-link="PROJECT_4_LIVE" href="#" target="_blank" rel="noopener">Live link <span aria-hidden="true">↗</span></a></div>
               <p class="tech-label">Tech Stack Used:</p>
               <div class="marquee" data-logos="react,nodedotjs,mongodb"></div>
             </div>
@@ -144,7 +144,7 @@
               <p class="pc-post">Project · Dashboard · 2026</p>
               <h3>Orbit / developer dashboard</h3>
               <p class="pc-text">Your repositories, activity, and daily momentum in one view.</p>
-              <div class="pc-links"><a class="more" href="https://github.com/tg1106" target="_blank" rel="noopener">GitHub <span aria-hidden="true">↗</span></a><a class="more" href="#" target="_blank" rel="noopener">Live link <span aria-hidden="true">↗</span></a></div>
+              <div class="pc-links"><a class="more" data-link="PROJECT_5_GITHUB" href="https://github.com/tg1106" target="_blank" rel="noopener">GitHub <span aria-hidden="true">↗</span></a><a class="more" data-link="PROJECT_5_LIVE" href="#" target="_blank" rel="noopener">Live link <span aria-hidden="true">↗</span></a></div>
               <p class="tech-label">Tech Stack Used:</p>
               <div class="marquee" data-logos="nextdotjs,tailwindcss,github"></div>
             </div>
@@ -156,7 +156,7 @@
               <p class="pc-post">Research · Data · 2026</p>
               <h3>[Data research title]</h3>
               <p class="pc-text">[One line on the data you studied and the pattern you found.]</p>
-              <div class="pc-links"><a class="more" href="https://github.com/tg1106" target="_blank" rel="noopener">GitHub <span aria-hidden="true">↗</span></a><a class="more" href="#" target="_blank" rel="noopener">Paper <span aria-hidden="true">↗</span></a></div>
+              <div class="pc-links"><a class="more" data-link="PROJECT_6_GITHUB" href="https://github.com/tg1106" target="_blank" rel="noopener">GitHub <span aria-hidden="true">↗</span></a><a class="more" data-link="PROJECT_6_LIVE" href="#" target="_blank" rel="noopener">Paper <span aria-hidden="true">↗</span></a></div>
               <p class="tech-label">Tech Stack Used:</p>
               <div class="marquee" data-logos="python,pandas,numpy"></div>
             </div>
@@ -200,7 +200,7 @@
               <p class="pc-post">Certificate · Cloud · Sample</p>
               <h3>Cloud practitioner</h3>
               <p class="pc-text">Cloud fundamentals, architecture, and building for scale.</p>
-              <a class="more" href="#">View credential <span aria-hidden="true">↗</span></a>
+              <a class="more" data-link="CERT_1_URL" href="#">View credential <span aria-hidden="true">↗</span></a>
               <p class="tech-label">Tech Stack Used:</p>
               <div class="marquee" data-logos="amazonwebservices"></div>
             </div>
@@ -212,7 +212,7 @@
               <p class="pc-post">Certificate · Front-end · Sample</p>
               <h3>Front-end development</h3>
               <p class="pc-text">Accessible interfaces, responsive systems, and modern web foundations.</p>
-              <a class="more" href="#">View credential <span aria-hidden="true">↗</span></a>
+              <a class="more" data-link="CERT_2_URL" href="#">View credential <span aria-hidden="true">↗</span></a>
               <p class="tech-label">Tech Stack Used:</p>
               <div class="marquee" data-logos="meta"></div>
             </div>
@@ -224,7 +224,7 @@
               <p class="pc-post">Certificate · Algorithms · Sample</p>
               <h3>Problem solving</h3>
               <p class="pc-text">Data structures, algorithms, and writing better solutions.</p>
-              <a class="more" href="#">View credential <span aria-hidden="true">↗</span></a>
+              <a class="more" data-link="CERT_3_URL" href="#">View credential <span aria-hidden="true">↗</span></a>
               <p class="tech-label">Tech Stack Used:</p>
               <div class="marquee" data-logos="hackerrank"></div>
             </div>
@@ -325,7 +325,7 @@
       <p class="pill pill-dark">Have an idea?</p>
       <h2 class="display">Let’s ship it</h2>
       <p class="lede">Let’s turn it into a sharp digital experience and get it out the door.</p>
-      <a class="btn btn-lg" href="mailto:tharungopinath.work@gmail.com">tharungopinath.work@gmail.com </a>
+      <a class="btn btn-lg" data-link="EMAIL" href="mailto:tharungopinath.work@gmail.com">tharungopinath.work@gmail.com </a>
       <div class="harbor">
         <canvas id="harbor" aria-hidden="true"></canvas>
         <canvas class="zoro" aria-hidden="true"></canvas>
@@ -347,11 +347,12 @@
     <p>© Tharun Gopinath 2026 · a little pixel paradise made by <span class="mk"><i data-logo="claude" data-brand></i>Claude</span>, <span class="mk"><img class="mk-logo" src="assets/diet-coke.svg" alt="Diet Coke" width="48" height="18"> diet coke</span> and <span class="mk"><svg class="heart" viewBox="0 0 9 8" shape-rendering="crispEdges" aria-hidden="true"><path fill="#e0463b" d="M1 0h2v1H1zM6 0h2v1H6zM0 1h4v1H0zM5 1h4v1H5zM0 2h9v2H0zM1 4h7v1H1zM2 5h5v1H2zM3 6h3v1H3zM4 7h1v1H4z"/></svg>love</span>.</p>
   </footer>
 
-  <script src="js/logos.js?v=20261135"></script>
-  <script src="js/theme.js?v=20261135"></script>
-  <script src="js/sea.js?v=20261135"></script>
-  <script src="js/props.js?v=20261135"></script>
-  <script src="js/harbor.js?v=20261135"></script>
+  <script src="js/config.js?v=20261140"></script>
+  <script src="js/logos.js?v=20261140"></script>
+  <script src="js/theme.js?v=20261140"></script>
+  <script src="js/sea.js?v=20261140"></script>
+  <script src="js/props.js?v=20261140"></script>
+  <script src="js/harbor.js?v=20261140"></script>
   <script>
     // logo-only chips for stickers and skill rows
     document.querySelectorAll('[data-chips]').forEach((el) => {
@@ -423,6 +424,18 @@
     const certs = makeDeck(document.getElementById('deck-cert'), document.getElementById('cert-prev'), document.getElementById('cert-next'), document.getElementById('cert-count'));
     certs.set(certs.all);
 
+    // links come from .env (see scripts/env-to-config.js): an empty value keeps the placeholder
+    (function () {
+      const L = window.LINKS || {};
+      document.querySelectorAll('[data-link]').forEach((a) => {
+        const v = L[a.dataset.link];
+        if (!v) return;
+        if (a.dataset.link === 'EMAIL') { a.href = 'mailto:' + v; a.firstChild.textContent = v + ' '; return; }
+        a.href = v;
+        if (/^https?:/.test(v)) { a.target = '_blank'; a.rel = 'noopener'; }
+      });
+    })();
+
     // brand icons for the social buttons and the footer
     document.querySelectorAll('[data-logo]').forEach((el) => {
       const L = LOGOS[el.dataset.logo];
@@ -445,7 +458,7 @@
     tabs.forEach((t) => t.addEventListener('click', () => openTab(t.dataset.tab)));
 
     // GitHub: the same rolling year GitHub shows on the profile. Reloads every 5 minutes.
-    const GITHUB_USER = 'tg1106';
+    const GITHUB_USER = (window.LINKS && window.LINKS.GITHUB_USER) || 'tg1106';
     (function () {
       const heat = $('heat');
       const lvl = (n) => (n === 0 ? 0 : n < 4 ? 1 : n < 8 ? 2 : n < 12 ? 3 : 4);

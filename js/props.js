@@ -108,6 +108,26 @@
     });
   }
 
+  const crabFrame = (f) => fromMap(f
+    ? ['X.......X', 'XX.....XX', '.X.X.X.X.', '..XXXXX..', '.XXXXXXX.', '..XXXXX..', 'X.XX.XX.X', '.XX...XX.']
+    : ['X.......X', 'XX.....XX', '.X.X.X.X.', '..XXXXX..', '.XXXXXXX.', '..XXXXX..', '.XX...XX.', 'XX.....XX'], { X: '#ec714c' });
+
+  // Easter egg: half of all page loads the sand smiley is drawn as the one-stroke smiley from The Mentalist
+  // (a circle that does not quite close, two flat eyes, a bowl of a mouth), without the drips. The pick is made once per load.
+  const RED_JOHN = Math.random() < 0.5;
+  const classicSmiley = () => carve(17, 17, (d) => {
+    for (let t = 0; t < 6.3; t += 0.04) d(8 + 7.4 * Math.cos(t), 8 + 7.4 * Math.sin(t));
+    [[5, 6], [11, 6], [5, 7], [11, 7]].forEach(([x, y]) => d(x, y));
+    for (let t = 0.35; t < 2.8; t += 0.06) d(8 + 4.6 * Math.cos(t), 8.5 + 4.2 * Math.sin(t));
+  });
+  const redJohnSmiley = () => carve(17, 17, (d) => {
+    const T = 2 * Math.PI + 0.25;
+    for (let t = 0; t < T; t += 0.03) { const a = -2.1 + t, r = 8 - 2.1 * (t / T); d(8 + r * Math.cos(a), 8 + r * Math.sin(a)); }   // one stroke, spiralling in at the end
+    for (let i = 0; i <= 3; i++) d(3.8 + i, 8.6 - 0.1 * i);                                                                          // left eye
+    for (let i = 0; i <= 4; i++) { const y = 7.9 - 0.3 * i; d(8.6 + i * 0.95, y); if (i < 2) d(8.6 + i * 0.95, y + 1); }                // right eye, a little higher
+    for (let u = 0; u <= 1; u += 0.04) { const x = 4.7 + u * 6.4, y = 12.3 + Math.sin(Math.PI * u); d(x, y); if (u < 0.45) d(x, y - 1); }   // mouth, heavier on the left
+  });
+
   const KINDS = {
     castle(night) {
       const L = '#ead19a', M = '#d6b676', D = '#b8935a', K = '#7a5b30', win = night ? '#ffd36b' : '#8a6a3c';
@@ -236,9 +256,18 @@
         [[21, 4], [23, 4], [22, 5], [21, 6], [23, 6]].forEach(([x, y]) => r(x, y, 1, 1, R));
       });
     },
+    oyster() {   // open pearl oyster: ridged grey-lilac valves, pink nacre, a pearl
+      return fromMap(['....DDDDDDDD....', '..DDSSLSSLSSDD..', '.DSSLSSLSSLSSSD.', 'DSLNNNNNNNNNNLSD', 'DSNNNNNNNNNNNNSD', 'DSNNNNPPPNNNNNSD', 'DSNNNNPPHNNNNNSD', '.DSNNNNHHNNNNSD.', '.DSSNNNNNNNNSSD.', '..DDSSSSSSSSDD..', '....DDDDDDDD....'],
+        { D: '#7d7690', S: '#a9a2b8', L: '#cfc9dc', N: '#f7e3ec', P: '#ffffff', H: '#d9bfd0' });
+    },
+    conch() {   // spiral conch
+      return fromMap(['.......BB.....', '.....BBAAB....', '....BAACAAB...', '...BAACCAAAB..', '..BAAACAAAABB.', '.BAAAAAAAAAAAB', 'BAADAAAAAAAADB', '.BBBBBBBBBBBB.'],
+        { A: '#f2b79a', B: '#d9805c', C: '#fbd9c4', D: '#c9694a' });
+    },
+    crab() { return crabFrame(0); },
     // sand drawings: a groove pressed into the sand with a light lip on its lower right
     heart() { return carve(13, 10, (d) => ['..###...###..', '.#...#.#...#.', '#.....#.....#', '#...........#', '.#.........#.', '..#.......#..', '...#.....#...', '....#...#....', '.....#.#.....', '......#......'].forEach((row, y) => [...row].forEach((ch, x) => ch === '#' && d(x, y)))); },
-    smiley() { return carve(17, 17, (d) => { for (let t = 0; t < 6.3; t += 0.04) d(8 + 7.4 * Math.cos(t), 8 + 7.4 * Math.sin(t)); [[5, 6], [11, 6], [5, 7], [11, 7]].forEach(([x, y]) => d(x, y)); for (let t = 0.35; t < 2.8; t += 0.06) d(8 + 4.6 * Math.cos(t), 8.5 + 4.2 * Math.sin(t)); }); },
+    smiley() { return RED_JOHN ? redJohnSmiley() : classicSmiley(); },
     spiral() { return carve(17, 17, (d) => { for (let t = 0; t < 16; t += 0.04) d(8 + 0.5 * t * Math.cos(t), 8 + 0.5 * t * Math.sin(t)); }); },
     board() {
       return mk(10, 40, (r) => {
@@ -256,11 +285,13 @@
   const placed = [];
   const BURIED = { chest: 1, map: 1 };
   const SPEC = [['castle', 5], ['umbrella', 5], ['palm', 4], ['chest', 4], ['castleSmall', 5], ['map', 4], ['towel', 5], ['bucket', 5],
-    ['rocks', 5], ['rocks', 4], ['board', 4], ['ball', 5], ['starfish', 4], ['shell', 4], ['heart', 5], ['smiley', 5], ['spiral', 5]];
+    ['rocks', 5], ['rocks', 4], ['board', 4], ['ball', 5], ['heart', 5], ['smiley', 5], ['spiral', 5]];
+  // the strip of dry sand just below the waterline: a few shells, starfish, an oyster with a pearl and two crabs, spread out evenly
+  const SHORE = [['oyster', 4], ['shell', 4], ['conch', 4], ['starfish', 4], ['crab', 4], ['starfish', 3], ['crab', 3]];
   const layer = Object.assign(document.createElement('div'), { id: 'beach-props' });
   layer.setAttribute('aria-hidden', 'true');
   document.body.append(layer);
-  function addProp(kind, scale, parent, fixed) {
+  function addProp(kind, scale, parent, fixed, shore) {
     const src = KINDS[kind](false);
     const el = document.createElement('span');
     el.className = 'prop prop-' + kind;
@@ -268,11 +299,13 @@
     el.append(Object.assign(document.createElement('i'), { className: 'shadow' }), cv);
     if (BURIED[kind]) el.append(Object.assign(document.createElement('i'), { className: 'mound' }));
     parent.append(el);
-    const p = { kind, cv, el, scale, w: src.width * scale, h: src.height * scale, x: fixed ? 0 : null, y: fixed ? 0 : null, fixed };
+    const p = { kind, cv, el, scale, w: src.width * scale, h: src.height * scale, x: fixed ? 0 : null, y: fixed ? 0 : null, fixed, shore, fy: Math.random(), jit: Math.random() };
     placed.push(p);
     return p;
   }
   SPEC.forEach(([kind, scale]) => addProp(kind, scale, layer));
+  const slots = SHORE.map((_, i) => i).sort(() => Math.random() - 0.5);          // which slot along the shore each piece gets
+  SHORE.forEach(([kind, scale], i) => { const p = addProp(kind, scale, layer, false, true); p.slot = slots[i]; });
   // the palms and hammock stand on top of the Qualification card for good, they are not part of the random scatter
   const eduWrap = document.querySelector('.edu-wrap');
   if (eduWrap) addProp('grove', 3, eduWrap, true).el.classList.add('edu-grove');
@@ -334,7 +367,16 @@
     document.querySelectorAll(TEXT).forEach((e) => { const g = document.createRange(); g.selectNodeContents(e); add(g.getBoundingClientRect()); });
     const hit = (a, b) => a.l < b.r && a.r > b.l && a.t < b.b && a.b > b.t;
     const taken = [];
-    placed.filter((p) => !p.fixed).sort((a, b) => b.w * b.h - a.w * a.h).forEach((p) => {
+    // shore decorations: evenly spaced slots along the sand below the waterline, never crowded, not part of the random scatter
+    const seaBottom = sea ? sea.getBoundingClientRect().bottom + sy : 0, sh = placed.filter((p) => p.shore);
+    sh.forEach((p) => {
+      const slotW = (x1 - x0) / sh.length;
+      p.x = Math.round(x0 + p.slot * slotW + (0.12 + 0.76 * p.jit) * Math.max(0, slotW - p.w));
+      p.y = Math.round(seaBottom - 44 + p.fy * 66);
+      p.el.style.display = ''; p.el.style.left = p.x + 'px'; p.el.style.top = p.y + 'px';
+      taken.push({ l: p.x - 8, r: p.x + p.w + 70, t: p.y - 8, b: p.y + p.h + 8 });
+    });
+    placed.filter((p) => !p.fixed && !p.shore).sort((a, b) => b.w * b.h - a.w * a.h).forEach((p) => {
       const fits = (x, y) => { const k = { l: x - 8, r: x + p.w + 8, t: y - 8, b: y + p.h + 8 }; return !blocks.some((b) => hit(k, b)) && !taken.some((b) => hit(k, b)); };
       let ok = p.x !== null && p.x + p.w <= x1 && p.y >= y0 && p.y + p.h <= y1 && fits(p.x, p.y);   // keep a still-valid spot
       for (let i = 0; !ok && i < 160 && y1 - y0 > p.h && x1 - x0 > p.w; i++) {
@@ -369,6 +411,7 @@
     setInterval(() => {
       if (document.hidden) return;
       const night = document.documentElement.dataset.night === '1';
+      placed.forEach((p) => { if (p.kind === 'crab') { const f = Math.floor(performance.now() / 230 + p.jit * 3) % 2, g = p.cv.getContext('2d'), src = crabFrame(f); g.clearRect(0, 0, p.cv.width, p.cv.height); g.drawImage(night ? moonlit(src) : src, 0, 0); } });
       placed.forEach((p) => { if (p.kind === 'grove' && p.x !== null) { const g = p.cv.getContext('2d'); g.clearRect(0, 0, p.cv.width, p.cv.height); g.drawImage(groveFrame(night, performance.now() / 1000), 0, 0); } });
     }, 100);
   }

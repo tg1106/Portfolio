@@ -208,9 +208,22 @@
     [[1, 1, 8, 2], [0, 2, 11, 1], [3, 0, 4, 1]],
   ];
 
+  /* seagulls: gliding across the daytime sky, wings flapping through four frames */
+  const GULL = [
+    ['g.......g', '.X.....X.', '..XX.XX..', '....X....'],
+    ['.........', 'gXX.X.XXg', '..XXXXX..', '....g....'],
+    ['....X....', '..XXXXX..', 'gXX...XXg', 'g.......g'],
+    ['.........', 'gXX.X.XXg', '..XXXXX..', '....g....'],
+  ];
+  const gulls = []; let nextGull = rnd(2, 5);
+  function spawnGulls() {
+    const d = Math.random() < 0.5 ? 1 : -1, n = 1 + ((Math.random() * 3) | 0), y = rnd(3, 11), sp = rnd(9, 14);
+    for (let i = 0; i < n; i++) gulls.push({ x: d > 0 ? -12 - i * rnd(12, 20) : W + 12 + i * rnd(12, 20), d, y: y + i * rnd(-3, 3), sp: sp * rnd(0.92, 1.08), ph: rnd(0, 6) });
+  }
+
   function spawnFish(t, near) {
-    let myth = !near && (FORCE_MYTH || Math.random() < 0.2), spot = null;
-    if (myth && !(spot = freeSpot(36, 26, 6, HOR + 16, S0 - 10))) myth = false;   // no clear water: a plain fish jumps instead
+    let myth = !near && (FORCE_MYTH || Math.random() < 0.25), spot = null;
+    if (myth && !(spot = freeSpot(36, 26, 6, HOR + 14, HOR + 14 + (S0 - HOR) * 0.4))) myth = false;   // mermaid and Poseidon only leap in the top half of the sea   // no clear water: a plain fish jumps instead
     const y0 = myth ? spot.y : rnd(HOR + 3, S0 - 3);
     const depth = (y0 - HOR) / (S0 - HOR);
     const small = !myth && depth < 0.38;
@@ -314,6 +327,21 @@
         for (const [rx, ry, rw, rh] of CLOUD_SHAPES[cl.k]) {
           for (let yy = 0; yy < rh; yy++) for (let xx = 0; xx < rw; xx++) blend(cx + rx + xx, cl.y + ry + yy, c.cloud, p.cloudA * 0.85);
         }
+      }
+    }
+    // seagulls (daytime only; they roost at dusk)
+    if (!reduce) {
+      nextGull -= dtSec;
+      if (nextGull <= 0) { if (p.stars < 0.2 && gulls.length < 4) spawnGulls(); nextGull = rnd(9, 20); }
+      for (let i = gulls.length - 1; i >= 0; i--) {
+        const gl = gulls[i];
+        gl.x += gl.d * gl.sp * dtSec;
+        if (gl.x < -30 || gl.x > W + 30) { gulls.splice(i, 1); continue; }
+        const fr = GULL[Math.floor(clock * 5 + gl.ph) % 4], gy = Math.round(gl.y + Math.sin(clock * 1.3 + gl.ph) * 1.6), a = Math.max(0, 1 - p.stars * 2);
+        fr.forEach((row, yy) => [...row].forEach((ch, xx) => {
+          if (ch === '.') return;
+          blend(Math.round(gl.x) + (gl.d > 0 ? xx : 8 - xx), gy + yy, ch === 'g' ? [118, 130, 150] : [252, 252, 248], a);
+        }));
       }
     }
     // sun / moon with stepped glow rings

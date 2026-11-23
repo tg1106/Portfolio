@@ -120,12 +120,13 @@
     [[5, 6], [11, 6], [5, 7], [11, 7]].forEach(([x, y]) => d(x, y));
     for (let t = 0.35; t < 2.8; t += 0.06) d(8 + 4.6 * Math.cos(t), 8.5 + 4.2 * Math.sin(t));
   });
-  const redJohnSmiley = () => carve(17, 17, (d) => {
-    const T = 2 * Math.PI + 0.25;
-    for (let t = 0; t < T; t += 0.03) { const a = -2.1 + t, r = 8 - 2.1 * (t / T); d(8 + r * Math.cos(a), 8 + r * Math.sin(a)); }   // one stroke, spiralling in at the end
-    for (let i = 0; i <= 3; i++) d(3.8 + i, 8.6 - 0.1 * i);                                                                          // left eye
-    for (let i = 0; i <= 4; i++) { const y = 7.9 - 0.3 * i; d(8.6 + i * 0.95, y); if (i < 2) d(8.6 + i * 0.95, y + 1); }                // right eye, a little higher
-    for (let u = 0; u <= 1; u += 0.04) { const x = 4.7 + u * 6.4, y = 12.3 + Math.sin(Math.PI * u); d(x, y); if (u < 0.45) d(x, y - 1); }   // mouth, heavier on the left
+  const redJohnSmiley = () => carve(29, 29, (d) => {   // finer grid (29x29) than the other sand drawings so the strokes stay accurate; shown at scale 3
+    const D = (x, y) => { d(x, y); d(x + 0.6, y + 0.6); };                                              // roughly a 2px stroke, a little uneven like a finger in sand
+    const T = 2 * Math.PI + 0.3;
+    for (let t = 0; t < T; t += 0.012) { const a = -2.1 + t, r = 13.2 - 4.2 * (t / T); D(14 + r * Math.cos(a), 14 + r * Math.sin(a)); }   // one stroke, spiralling in at the end
+    for (let i = 0; i <= 1; i += 0.04) { const x = 7.4 + i * 4.6, y = 14.4 - 0.6 * i; D(x, y); D(x, y + 1); }       // left eye: flat, rising a touch
+    for (let i = 0; i <= 1; i += 0.03) { const x = 15 + i * 5.6, y = 12.2 + 2.1 * i; D(x, y); D(x, y + 1); }       // right eye: higher, sloping down to the right
+    for (let u = 0; u <= 1; u += 0.02) { const x = 8.8 + u * 9.4, y = 19.2 + 1.7 * Math.sin(Math.PI * u); D(x, y); if (u < 0.6) D(x, y + 1); if (u < 0.25) D(x, y + 2); }   // bowl mouth, heavier on the left
   });
 
   const KINDS = {
@@ -285,7 +286,7 @@
   const placed = [];
   const BURIED = { chest: 1, map: 1 };
   const SPEC = [['castle', 5], ['umbrella', 5], ['palm', 4], ['chest', 4], ['castleSmall', 5], ['map', 4], ['towel', 5], ['bucket', 5],
-    ['rocks', 5], ['rocks', 4], ['board', 4], ['ball', 5], ['heart', 5], ['smiley', 5], ['spiral', 5]];
+    ['rocks', 5], ['rocks', 4], ['board', 4], ['ball', 5], ['heart', 5], ['smiley', RED_JOHN ? 3 : 5], ['spiral', 5]];
   // the strip of dry sand just below the waterline: a few shells, starfish, an oyster with a pearl and two crabs, spread out evenly
   const SHORE = [['oyster', 4], ['shell', 4], ['conch', 4], ['starfish', 4], ['crab', 4], ['starfish', 3], ['crab', 3]];
   const layer = Object.assign(document.createElement('div'), { id: 'beach-props' });

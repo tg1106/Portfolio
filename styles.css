@@ -261,18 +261,6 @@ html[data-night="1"] .edu { filter: brightness(.86); }
 .rows span { font: 700 clamp(22px, 3vw, 40px)/1.1 var(--display); letter-spacing: -.02em; }
 .rows em { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; font-style: normal; }
 
-/* ---------- FAQ ---------- */
-.qa { display: grid; gap: 14px; max-width: 900px; }
-details { border-radius: 22px; padding: 22px 26px; background: color-mix(in srgb, var(--tint) calc(var(--tint-amt) * 1%), var(--lav)); color: var(--cink); }
-details:nth-child(2) { --x: 1; background: color-mix(in srgb, var(--tint) calc(var(--tint-amt) * 1%), var(--yel)); }
-details:nth-child(3) { background: color-mix(in srgb, var(--tint) calc(var(--tint-amt) * 1%), var(--mint)); }
-details:nth-child(4) { background: color-mix(in srgb, var(--tint) calc(var(--tint-amt) * 1%), var(--blue)); }
-summary { cursor: pointer; list-style: none; display: flex; justify-content: space-between; gap: 16px; font: 700 clamp(19px, 2vw, 26px)/1.2 var(--display); }
-summary::-webkit-details-marker { display: none; }
-summary::after { content: "+"; font-size: 30px; line-height: .8; transition: transform .25s; }
-details[open] summary::after { transform: rotate(45deg); }
-details p { margin-top: 14px; max-width: 60ch; color: var(--cmuted); }
-
 /* ---------- CTA + footer ---------- */
 .cta { position: relative; max-width: 1408px; margin: 120px auto 0; padding: 88px clamp(24px, 5vw, 72px) 250px; border-radius: 32px; overflow: hidden; display: grid; gap: 26px; justify-items: start;
   color: var(--cink); background: var(--grain) 0 0 / 216px 216px, color-mix(in srgb, var(--tint) calc(var(--tint-amt) * 1%), var(--lime)); }

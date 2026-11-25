@@ -355,7 +355,7 @@
   drawLines();
 
   const TEXT = 'h1, h2, .about-name, .lede, .byline, .sec-head p, .pass p, .foot p';            // measured by their text, not their full-width box
-  const BOXES = '.nav, .pill, .btn, .letter, .deck-wrap, .cards > *, .stats li, .rows li, .qa details, .about-photo, .socials, .heat-panel, .edu, .tabs, .walkman, .wm-listen, .book, .diary-nav, .edu-grove, .sand-line, .cta, .foot .links, .logo';
+  const BOXES = '.nav, .pill, .btn, .letter, .deck-wrap, .cards > *, .stats li, .rows li, .about-photo, .socials, .heat-panel, .edu, .tabs, .walkman, .wm-listen, .book, .diary-nav, .edu-grove, .sand-line, .cta, .foot .links, .logo';
   function layoutProps() {
     const sy = window.scrollY, body = document.body;
     layer.style.height = body.offsetHeight + 'px';
